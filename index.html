@@ -649,7 +649,7 @@
       `(2) Legal Fees: Rs.20,000  (Agreement to Sale & Sale Deed registration)`,
       `(3) Infrastructure Cost: ${rsPdf(p.infra)}  (Roads, drainage, utilities & landscaping)`,
       `(4) Stamp Duty: ${p.sdr}% of Base Amount + Reg. Fees (capped Rs.30,000)  -  Maharashtra Govt. rates${p.isFemale ? '  |  5% applied for female buyer(s)' : ''}`,
-      `(5) GST @ 5% of Base Amount as per prevailing GST norms  -  subject to Govt. of India notifications`,
+      `(5) GST as per prevailing GST norms  -  subject to Govt. of India notifications`,
     ];
     const fnH = 7 + fnLines.length * 4.2;
     doc.setFillColor(255,251,245); doc.setDrawColor(...AC); doc.setLineWidth(0.3);
@@ -688,7 +688,7 @@
     doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(135,135,135);
     const notes = [
       `* Stamp Duty: ${p.sdr}% of Base Amount + Reg. Fees (capped Rs.30,000) per Maharashtra Govt. rates.${p.isFemale?' 5% applied for female buyer(s).'  :' 1% concession available for property registered exclusively in name of female buyer(s).'}`,
-      '** GST @ 5% of Base Amount as per prevailing GST norms. Rate subject to change per Govt. of India notifications.',
+      '** GST as per prevailing GST norms. Rate subject to change per Govt. of India notifications.',
       '*** Prices effective WEF 05.05.2026 and subject to revision without notice. This quotation is for information only and does not constitute an offer or contract.',
     ];
     notes.forEach(n => {
