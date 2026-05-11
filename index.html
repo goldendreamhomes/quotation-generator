@@ -100,19 +100,69 @@
     input:checked + .toggle-track::before { transform: translateX(18px); }
     .toggle-lbl { font-size: 0.82rem; font-weight: 600; color: #744210; user-select: none; line-height: 1.3; }
 
-    /* Pricing table */
+    /* ── New pricing cards ── */
     .pricing-wrap { display: none; }
     .pricing-wrap.show { display: block; }
-    .pricing-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,60,94,0.08); }
-    .pricing-table thead th { background: #1a3c5e; color: white; padding: 9px 12px; text-align: left; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; }
-    .pricing-table thead th:last-child { text-align: right; }
-    .pricing-table tbody td { padding: 8px 12px; border-bottom: 1px solid #edf2f7; color: #4a5568; vertical-align: middle; }
-    .pricing-table tbody td:first-child { font-weight: 800; color: #1a3c5e; width: 24px; }
-    .pricing-table tbody td:last-child { text-align: right; font-weight: 700; color: #2d3748; white-space: nowrap; }
-    .pricing-table tbody tr:nth-child(even) td { background: #f7fafc; }
-    .pricing-table tbody tr.subtotal td { background: #ebf4ff !important; font-weight: 700; color: #1a3c5e; }
-    .pricing-table tbody tr.grand td { background: #1a3c5e !important; color: white; font-weight: 800; font-size: 0.9rem; border-bottom: none; }
-    .sub-note { font-size: 0.69rem; color: #a0aec0; font-weight: 400; display: block; margin-top: 1px; }
+
+    /* Base Amount — prominent highlighted card */
+    .pc-base {
+      background: linear-gradient(135deg, #1a3c5e 0%, #2c5282 100%);
+      border-radius: 11px 11px 0 0; padding: 15px 18px;
+      position: relative; overflow: hidden;
+    }
+    .pc-base::after {
+      content: ''; position: absolute; width: 110px; height: 110px;
+      background: rgba(200,146,42,0.13); border-radius: 50%; top: -28px; right: -24px;
+    }
+    .pc-base-hdr { display: flex; justify-content: space-between; align-items: center; }
+    .pc-base-left .lbl { font-size: 0.65rem; font-weight: 800; color: rgba(190,220,248,0.72); text-transform: uppercase; letter-spacing: 1.3px; margin-bottom: 4px; }
+    .pc-base-left .sub { font-size: 0.75rem; color: rgba(170,205,240,0.65); }
+    .pc-base-num { font-size: 1.75rem; font-weight: 900; color: white; letter-spacing: -0.5px; text-align: right; }
+
+    /* Fixed charges + Sub-Total */
+    .pc-fixed {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 18px; background: #f4f6f8;
+      font-size: 0.82rem; color: #718096;
+    }
+    .pc-fixed .amt { font-weight: 600; color: #4a5568; }
+    .pc-sub {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 18px; background: #e8f0fa;
+      font-size: 0.92rem; font-weight: 700; color: #2d3748;
+      border-radius: 0 0 9px 9px; margin-bottom: 10px;
+    }
+
+    /* Govt. Statutory Charges */
+    .pc-govt { border: 1.5px solid #bee3f8; border-radius: 9px; overflow: hidden; margin-bottom: 6px; }
+    .pc-govt-hdr {
+      background: #ebf8ff; color: #2b6cb0;
+      font-size: 0.67rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1.3px; padding: 8px 14px;
+    }
+    .pc-govt-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 9px 14px; font-size: 0.84rem; color: #4a5568;
+      border-top: 1px solid #e8f4fd;
+    }
+    .pc-govt-row .amt { font-weight: 700; color: #2d3748; }
+
+    /* Grand Total */
+    .pc-grand {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #1a3c5e; color: white; padding: 14px 18px;
+      border-radius: 9px; margin-bottom: 11px;
+      font-size: 0.95rem; font-weight: 700;
+    }
+    .pc-grand .amt { font-size: 1.2rem; font-weight: 900; color: #fbd38d; }
+
+    /* Footnotes */
+    .pc-footnotes {
+      background: #fffbf5; border-left: 3px solid #c8922a;
+      border-radius: 0 7px 7px 0; padding: 10px 13px;
+      font-size: 0.7rem; color: #718096; line-height: 1.8; margin-bottom: 11px;
+    }
+    .fn-sup { font-size: 0.65rem; color: #c8922a; font-weight: 800; }
 
     /* Booking note */
     .booking-note {
@@ -239,28 +289,52 @@
 
     <!-- Pricing breakdown -->
     <div class="pricing-wrap" id="pricingWrap">
-      <table class="pricing-table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Description</th>
-            <th style="text-align:right">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>A</td><td>Total Usable Area</td><td id="pr-area">—</td></tr>
-          <tr><td>B</td><td>Rate per sq.ft.</td><td id="pr-rate">—</td></tr>
-          <tr><td>C</td><td>Base Amount <span class="sub-note">A × B</span></td><td id="pr-amt">—</td></tr>
-          <tr><td>D</td><td>Maintenance Charges <span class="sub-note">3 years from possession</span></td><td id="pr-maint">₹90,000</td></tr>
-          <tr><td>E</td><td>Legal Fees <span class="sub-note">Reg. Agreement to Sale &amp; Sale Deed</span></td><td id="pr-legal">₹20,000</td></tr>
-          <tr><td>F</td><td>Infrastructure Cost <span class="sub-note">Roads, drainage, utilities &amp; landscaping</span></td><td id="pr-infra">—</td></tr>
-          <tr class="subtotal"><td>G</td><td><strong>Sub-Total</strong> <span class="sub-note" style="color:#5a89b8">C + D + E + F</span></td><td id="pr-sub">—</td></tr>
-          <tr><td>H</td><td>Stamp Duty + Registration <span class="sub-note" id="stampNote">6% of C + Reg. Fees (capped ₹30,000)</span></td><td id="pr-stamp">—</td></tr>
-          <tr><td>J</td><td>GST <span class="sub-note">5% of C · as per prevailing norms</span></td><td id="pr-gst">—</td></tr>
-          <tr class="grand"><td></td><td>Grand Total (MRP) <span style="font-size:0.72rem;font-weight:500;opacity:0.8">G + H + J</span></td><td id="pr-mrp">—</td></tr>
-        </tbody>
-      </table>
 
+      <!-- Base Amount — prominent card -->
+      <div class="pc-base">
+        <div class="pc-base-hdr">
+          <div class="pc-base-left">
+            <div class="lbl">Base Amount</div>
+            <div class="sub"><span id="pr-area">—</span> &nbsp;×&nbsp; ₹<span id="pr-rate">—</span>/sq.ft.</div>
+          </div>
+          <div class="pc-base-num" id="pr-amt">—</div>
+        </div>
+      </div>
+
+      <!-- Fixed charges (footnotes) -->
+      <div class="pc-fixed"><span>+ Maintenance &nbsp;<span class="fn-sup">①</span></span><span class="amt">₹90,000</span></div>
+      <div class="pc-fixed" style="background:#eef1f5"><span>+ Legal Fees &nbsp;<span class="fn-sup">②</span></span><span class="amt">₹20,000</span></div>
+      <div class="pc-fixed"><span>+ Infrastructure Cost &nbsp;<span class="fn-sup">③</span></span><span class="amt" id="pr-infra">—</span></div>
+
+      <!-- Sub-Total -->
+      <div class="pc-sub"><span>Sub-Total</span><span id="pr-sub">—</span></div>
+
+      <!-- Govt. Statutory Charges -->
+      <div class="pc-govt">
+        <div class="pc-govt-hdr">Govt. Statutory Charges</div>
+        <div class="pc-govt-row">
+          <span>Stamp Duty + Registration &nbsp;<span class="fn-sup">④</span></span>
+          <span class="amt" id="pr-stamp">—</span>
+        </div>
+        <div class="pc-govt-row">
+          <span>GST &nbsp;<span class="fn-sup">⑤</span>&nbsp; <span style="font-size:0.76rem;color:#a0aec0">5% of Base Amount</span></span>
+          <span class="amt" id="pr-gst">—</span>
+        </div>
+      </div>
+
+      <!-- Grand Total -->
+      <div class="pc-grand"><span>Grand Total &nbsp;<span style="font-size:0.78rem;font-weight:400;opacity:0.75">(incl. all charges)</span></span><span class="amt" id="pr-mrp">—</span></div>
+
+      <!-- Footnotes -->
+      <div class="pc-footnotes">
+        <span class="fn-sup">①</span> Maintenance: ₹90,000 (3 years from possession)<br>
+        <span class="fn-sup">②</span> Legal Fees: ₹20,000 (Agreement to Sale &amp; Sale Deed registration)<br>
+        <span class="fn-sup">③</span> Infrastructure Cost: <span id="fn-infra">—</span> (Roads, drainage, utilities &amp; landscaping)<br>
+        <span class="fn-sup">④</span> Stamp Duty: <span id="fn-sdr">6%</span> of Base Amount + Reg. Fees (capped ₹30,000) &nbsp;·&nbsp; as per Maharashtra Govt. rates<br>
+        <span class="fn-sup">⑤</span> GST @ 5% as per prevailing GST norms &nbsp;·&nbsp; subject to Govt. of India notifications
+      </div>
+
+      <!-- Booking note -->
       <div class="booking-note">
         <span>💡</span>
         <div>
@@ -456,19 +530,23 @@
     const isFemale = document.getElementById('femaleTog').checked;
     const p        = compute(amount, curType, isFemale);
 
-    set('pr-area',  `${curArea.toLocaleString('en-IN')} sq.ft.`);
-    set('pr-rate',  `₹${rate.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}/sq.ft.`);
-    set('pr-amt',   inr(amount));
-    set('pr-maint', inr(90000));
-    set('pr-legal', inr(20000));
+    // Base amount card
+    set('pr-area', curArea.toLocaleString('en-IN') + ' sq.ft.');
+    set('pr-rate', rate.toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2}));
+    set('pr-amt',  inr(amount));
+
+    // Fixed charges
     set('pr-infra', inr(p.infra));
+
+    // Sub-total & statutory
     set('pr-sub',   inr(p.sub));
     set('pr-stamp', inr(p.stamp));
     set('pr-gst',   inr(p.gst));
     set('pr-mrp',   inr(p.mrp));
 
-    document.getElementById('stampNote').textContent =
-      `${p.sdr}% of C + Reg. Fees (capped ₹30,000)${isFemale ? ' · Female buyer(s) – 1% concession' : ''}`;
+    // Footnote details
+    set('fn-infra', inr(p.infra));
+    set('fn-sdr',   `${p.sdr}% ${isFemale ? '(female buyer concession applied)' : ''}`);
 
     curP = { rate, amount, isFemale, ...p };
   }
@@ -571,69 +649,112 @@
       doc.text('Female buyer(s) · 5% Stamp Duty applied', b2+5, y+26);
     }
 
-    // ── PRICE TABLE (starts ~82mm) ──
+    // ── PRICING SECTION (new card layout) ──
     y += 32;
+    const CW = W - ML - MR;   // 178mm content width
 
-    const sdDesc = `${p.sdr}% of C + Reg. Fees (capped Rs.30,000)${p.isFemale?' [Female buyer(s)]':''}`;
+    // 1. BASE AMOUNT card
+    doc.setFillColor(...PC);
+    doc.roundedRect(ML, y, CW, 21, 3, 3, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(165,205,240);
+    doc.text('BASE AMOUNT', ML+7, y+6.5);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(130,185,230);
+    doc.text(
+      `${curArea.toLocaleString('en-IN')} sq.ft.  x  Rs.${p.rate.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}/sq.ft.`,
+      ML+7, y+12.5
+    );
+    doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(255,255,255);
+    doc.text(rsPdf(p.amount), W-MR-4, y+15, {align:'right'});
+    y += 21;
 
-    doc.autoTable({
-      startY: y,
-      margin: {left:ML, right:MR},
-      head: [['','Description','Amount']],
-      body: [
-        ['A', 'Total Usable Area',                  `${curArea.toLocaleString('en-IN')} sq.ft.`],
-        ['B', 'Rate (per sq.ft.)',                   `Rs.${p.rate.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}`],
-        ['C', 'Base Amount  (A x B)',                rsPdf(p.amount)],
-        ['D', 'Maintenance Charges  (3 yrs)',        rsPdf(90000)],
-        ['E', 'Legal Fees',                          rsPdf(20000)],
-        ['F', 'Infrastructure Cost',                 rsPdf(p.infra)],
-        ['G', 'Sub-Total  (C+D+E+F)',                rsPdf(p.sub)],
-        ['H', `Stamp Duty + Reg. Fees\n${sdDesc}`,   rsPdf(p.stamp)],
-        ['J', 'GST  (5% of C)',                      rsPdf(p.gst)],
-        ['',  'GRAND TOTAL  (G+H+J)',                rsPdf(p.mrp)],
-      ],
-      styles: {
-        fontSize: 8, font: 'helvetica', textColor: [55,65,81],
-        lineColor: [226,232,240], lineWidth: 0.2,
-        cellPadding: {top:2.5,bottom:2.5,left:4,right:4},
-      },
-      headStyles: {
-        fillColor:PC, textColor:[255,255,255], fontSize:7, fontStyle:'bold',
-        cellPadding:{top:3,bottom:3,left:4,right:4},
-      },
-      columnStyles: {
-        0: {cellWidth:9,  halign:'center', fontStyle:'bold', textColor:PC},
-        1: {cellWidth:'auto'},
-        2: {cellWidth:42, halign:'right',  fontStyle:'bold'},
-      },
-      alternateRowStyles: {fillColor:[249,250,252]},
-      theme:'grid',
-      didParseCell: (data) => {
-        if (data.section!=='body') return;
-        if (data.row.index===6) {  // Sub-Total G
-          data.cell.styles.fillColor=[235,244,255];
-          data.cell.styles.fontStyle='bold';
-          data.cell.styles.textColor=PC;
-        }
-        if (data.row.index===9) {  // Grand Total
-          data.cell.styles.fillColor=PC;
-          data.cell.styles.textColor=[255,255,255];
-          data.cell.styles.fontStyle='bold';
-          data.cell.styles.fontSize=9.5;
-        }
-      },
+    // 2. FIXED CHARGES rows
+    const fixedRows = [
+      [`+ Maintenance  (1)`, rsPdf(90000)],
+      [`+ Legal Fees  (2)`,  rsPdf(20000)],
+      [`+ Infrastructure Cost  (3)`, rsPdf(p.infra)],
+    ];
+    fixedRows.forEach((row, i) => {
+      doc.setFillColor(i % 2 === 0 ? 244 : 247, i % 2 === 0 ? 246 : 248, i % 2 === 0 ? 248 : 251);
+      doc.rect(ML, y, CW, 7, 'F');
+      doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(100,112,130);
+      doc.text(row[0], ML+7, y+4.8);
+      doc.setFont('helvetica','bold'); doc.setTextColor(70,82,100);
+      doc.text(row[1], W-MR-4, y+4.8, {align:'right'});
+      y += 7;
     });
 
-    y = doc.lastAutoTable.finalY + 5;
+    // 3. SUB-TOTAL bar
+    doc.setFillColor(218,232,250);
+    doc.rect(ML, y, CW, 9, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...PC);
+    doc.text('Sub-Total', ML+7, y+6.2);
+    doc.text(rsPdf(p.sub), W-MR-4, y+6.2, {align:'right'});
+    y += 9;
+    y += 4;
+
+    // 4. GOVT. STATUTORY CHARGES section
+    doc.setFillColor(235,248,255); doc.setDrawColor(190,227,248); doc.setLineWidth(0.4);
+    doc.rect(ML, y, CW, 7, 'FD');
+    doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(43,108,176);
+    doc.text('GOVT. STATUTORY CHARGES', ML+5, y+4.6);
+    y += 7;
+
+    // Stamp duty row
+    const sdLabel = `Stamp Duty + Registration  (4)   ${p.sdr}% of Base Amt + Reg. Rs.30,000${p.isFemale ? '  [Female buyer(s)]' : ''}`;
+    doc.setFillColor(255,255,255); doc.setDrawColor(190,227,248); doc.setLineWidth(0.3);
+    doc.rect(ML, y, CW, 9, 'FD');
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(74,85,104);
+    doc.text(sdLabel, ML+5, y+6);
+    doc.setFont('helvetica','bold'); doc.setTextColor(45,55,72);
+    doc.text(rsPdf(p.stamp), W-MR-4, y+6, {align:'right'});
+    y += 9;
+
+    // GST row
+    doc.setFillColor(250,252,255); doc.setDrawColor(190,227,248); doc.setLineWidth(0.3);
+    doc.rect(ML, y, CW, 9, 'FD');
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(74,85,104);
+    doc.text('GST  (5)   5% of Base Amount  (as per prevailing GST norms)', ML+5, y+6);
+    doc.setFont('helvetica','bold'); doc.setTextColor(45,55,72);
+    doc.text(rsPdf(p.gst), W-MR-4, y+6, {align:'right'});
+    y += 9;
+    y += 4;
+
+    // 5. GRAND TOTAL bar
+    doc.setFillColor(...PC);
+    doc.roundedRect(ML, y, CW, 14, 3, 3, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(255,255,255);
+    doc.text('GRAND TOTAL  (MRP)', ML+7, y+9);
+    doc.setFontSize(13); doc.setTextColor(...AC);
+    doc.text(rsPdf(p.mrp), W-MR-4, y+9.5, {align:'right'});
+    y += 14;
+    y += 4;
+
+    // 6. FOOTNOTES block
+    const fnLines = [
+      `(1) Maintenance Charges: Rs.90,000  (3 years from possession)`,
+      `(2) Legal Fees: Rs.20,000  (Agreement to Sale & Sale Deed registration)`,
+      `(3) Infrastructure Cost: ${rsPdf(p.infra)}  (Roads, drainage, utilities & landscaping)`,
+      `(4) Stamp Duty: ${p.sdr}% of Base Amount + Reg. Fees (capped Rs.30,000)  -  Maharashtra Govt. rates${p.isFemale ? '  |  5% applied for female buyer(s)' : ''}`,
+      `(5) GST @ 5% of Base Amount as per prevailing GST norms  -  subject to Govt. of India notifications`,
+    ];
+    const fnH = 7 + fnLines.length * 4.2;
+    doc.setFillColor(255,251,245); doc.setDrawColor(...AC); doc.setLineWidth(0.3);
+    doc.roundedRect(ML, y, CW, fnH, 2, 2, 'FD');
+    doc.setFillColor(...AC); doc.rect(ML, y, 2.5, fnH, 'F');
+    doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(113,128,150);
+    fnLines.forEach((line, i) => {
+      doc.text(line, ML+6, y + 5 + i * 4.2);
+    });
+    y += fnH + 5;
 
     // ── BOOKING NOTE ──
     doc.setFillColor(255,251,235); doc.setDrawColor(...AC); doc.setLineWidth(0.3);
-    doc.roundedRect(ML,y,W-ML-MR,12,2.5,2.5,'FD');
+    doc.roundedRect(ML,y,CW,12,2.5,2.5,'FD');
     doc.setFillColor(...AC); doc.rect(ML,y,2,12,'F');
     doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(130,70,0);
     doc.text('Booking Amount:', ML+6, y+5);
     doc.setFont('helvetica','normal');
-    doc.text('Rs.1,00,000/- (One Lakh Only) payable at the time of booking.', ML+39, y+5);
+    doc.text('Rs.1,00,000/- (One Lakh Only) payable at the time of booking.', ML+40, y+5);
     doc.setFontSize(7); doc.setTextColor(150,90,20);
     doc.text('Milestone-based payment plan to be shared with the Allotment Letter.', ML+6, y+10);
 
