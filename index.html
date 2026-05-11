@@ -292,6 +292,20 @@
 
   // ── State ──
   let curFloor = '', curUnit = '', curType = '', curArea = 0, curP = null;
+  let flatStatus = {};  // loaded from data.json
+
+  // ── Load availability data ──
+  async function loadData() {
+    try {
+      const resp = await fetch('./data.json?v=' + Date.now());
+      if (resp.ok) {
+        const data = await resp.json();
+        flatStatus = data.flats || {};
+      }
+    } catch (e) {
+      flatStatus = {}; // if file can't be loaded, all flats are available
+    }
+  }
 
   // ── Price base data (WEF 05.05.2026) ──
   // 3BHK = 1540 sqft · 2BHK = 1185 sqft
@@ -362,6 +376,7 @@
     for (let i=1;i<=16;i++) {
       const o=document.createElement('option'); o.value=i; o.textContent=`Floor ${i}`; sel.appendChild(o);
     }
+    loadData(); // fetch availability data in background
   });
 
   // ── Floor change ──
@@ -372,10 +387,22 @@
     fs.disabled = !floor;
     hideAll();
     if (!floor) return;
+
+    let count = 0;
     for (let u=1;u<=8;u++) {
+      const flatNo = fn(floor, u);
+      const status = flatStatus[flatNo] || 'available';
+      if (status === 'sold') continue;  // skip sold flats
       const {type} = baseData(floor,u);
       const o = document.createElement('option');
-      o.value=u; o.textContent=`${fn(floor,u)}  —  ${type}`; fs.appendChild(o);
+      o.value=u; o.textContent=`${flatNo}  —  ${type}`; fs.appendChild(o);
+      count++;
+    }
+
+    if (count === 0) {
+      const o = document.createElement('option');
+      o.value=''; o.textContent='All flats on this floor are sold'; o.disabled=true;
+      fs.appendChild(o);
     }
   }
 

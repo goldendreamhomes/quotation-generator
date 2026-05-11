@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "project": "Golden Legacy",
+    "wing": "B",
+    "lastUpdated": "2026-05-11",
+    "instructions": "To mark a flat as sold, change its value from 'available' to 'sold'. It will immediately stop appearing in the quotation generator dropdown. Save the file and re-upload to GitHub."
+  },
+  "flats": {
+    "101": "available", "102": "available", "103": "available", "104": "available",
+    "105": "available", "106": "available", "107": "available", "108": "available",
+
+    "201": "available", "202": "available", "203": "available", "204": "available",
+    "205": "available", "206": "available", "207": "available", "208": "available",
+
+    "301": "available", "302": "available", "303": "available", "304": "available",
+    "305": "available", "306": "available", "307": "available", "308": "available",
+
+    "401": "available", "402": "available", "403": "available", "404": "available",
+    "405": "available", "406": "available", "407": "available", "408": "available",
+
+    "501": "available", "502": "available", "503": "available", "504": "available",
+    "505": "available", "506": "available", "507": "available", "508": "available",
+
+    "601": "available", "602": "available", "603": "available", "604": "available",
+    "605": "available", "606": "available", "607": "available", "608": "available",
+
+    "701": "available", "702": "available", "703": "available", "704": "available",
+    "705": "available", "706": "available", "707": "available", "708": "available",
+
+    "801": "available", "802": "available", "803": "available", "804": "available",
+    "805": "available", "806": "available", "807": "available", "808": "available",
+
+    "901": "available", "902": "available", "903": "available", "904": "available",
+    "905": "available", "906": "available", "907": "available", "908": "available",
+
+    "1001": "available", "1002": "available", "1003": "available", "1004": "available",
+    "1005": "available", "1006": "available", "1007": "available", "1008": "available",
+
+    "1101": "available", "1102": "available", "1103": "available", "1104": "available",
+    "1105": "available", "1106": "available", "1107": "available", "1108": "available",
+
+    "1201": "available", "1202": "available", "1203": "available", "1204": "available",
+    "1205": "available", "1206": "available", "1207": "available", "1208": "available",
+
+    "1301": "available", "1302": "available", "1303": "available", "1304": "available",
+    "1305": "available", "1306": "available", "1307": "available", "1308": "available",
+
+    "1401": "available", "1402": "available", "1403": "available", "1404": "available",
+    "1405": "available", "1406": "available", "1407": "available", "1408": "available",
+
+    "1501": "available", "1502": "available", "1503": "available", "1504": "available",
+    "1505": "available", "1506": "available", "1507": "available", "1508": "available",
+
+    "1601": "available", "1602": "available", "1603": "available", "1604": "available",
+    "1605": "available", "1606": "available", "1607": "available", "1608": "available"
+  }
+}
