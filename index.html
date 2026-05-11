@@ -302,8 +302,9 @@
         <span class="fn-sup">①</span> Maintenance: ₹90,000 (3 years from possession)<br>
         <span class="fn-sup">②</span> Legal Fees: ₹20,000 (Agreement to Sale &amp; Sale Deed registration)<br>
         <span class="fn-sup">③</span> Infrastructure Cost: <span id="fn-infra">—</span> (Roads, drainage, utilities &amp; landscaping)<br>
-        <span class="fn-sup">④</span> Stamp Duty: <span id="fn-sdr">6%</span> of Base Amount + Reg. Fees (capped ₹30,000) &nbsp;·&nbsp; as per Maharashtra Govt. rates<br>
-        <span class="fn-sup">⑤</span> GST as per prevailing GST norms &nbsp;·&nbsp; subject to Govt. of India notifications
+        <span class="fn-sup">④</span> Covered under-building parking: ₹2,00,000/- additional per slot<br>
+        <span class="fn-sup">⑤</span> Stamp Duty: <span id="fn-sdr">6%</span> of Base Amount + Reg. Fees (capped ₹30,000) &nbsp;·&nbsp; as per Maharashtra Govt. rates<br>
+        <span class="fn-sup">⑥</span> GST as per prevailing GST norms &nbsp;·&nbsp; subject to Govt. of India notifications
       </div>
 
       <!-- Booking note -->
@@ -637,8 +638,9 @@
       `(1) Maintenance Charges: Rs.90,000  (3 years from possession)`,
       `(2) Legal Fees: Rs.20,000  (Agreement to Sale & Sale Deed registration)`,
       `(3) Infrastructure Cost: ${rsPdf(p.infra)}  (Roads, drainage, utilities & landscaping)`,
-      `(4) Stamp Duty: ${p.sdr}% of Base Amount + Reg. Fees (capped Rs.30,000)  -  Maharashtra Govt. rates${p.isFemale ? '  |  5% applied for female buyer(s)' : ''}`,
-      `(5) GST as per prevailing GST norms  -  subject to Govt. of India notifications`,
+      `(4) Covered under-building parking: Rs.2,00,000/- additional per slot`,
+      `(5) Stamp Duty: ${p.sdr}% of Base Amount + Reg. Fees (capped Rs.30,000)  -  Maharashtra Govt. rates${p.isFemale ? '  |  5% applied for female buyer(s)' : ''}`,
+      `(6) GST as per prevailing GST norms  -  subject to Govt. of India notifications`,
     ];
     const fnH = 7 + fnLines.length * 4.2;
     doc.setFillColor(255,251,245); doc.setDrawColor(...AC); doc.setLineWidth(0.3);
