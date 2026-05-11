@@ -8,7 +8,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: #edf2f7;
@@ -18,7 +17,6 @@
       align-items: center;
       padding: 32px 16px 48px;
     }
-
     .card {
       background: white;
       border-radius: 16px;
@@ -27,274 +25,123 @@
       max-width: 560px;
       overflow: hidden;
     }
-
-    /* Header */
-    .card-header {
-      background: #1a3c5e;
-      padding: 28px 28px 22px;
-      text-align: center;
-      position: relative;
-    }
-    .card-header h1 {
-      font-size: 1.9rem;
-      font-weight: 900;
-      color: white;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-    .card-header .tagline {
-      font-size: 0.72rem;
-      color: rgba(200,220,245,0.85);
-      letter-spacing: 2px;
-      margin-top: 5px;
-      text-transform: uppercase;
-    }
+    .card-header { background: #1a3c5e; padding: 26px 28px 20px; text-align: center; }
+    .card-header h1 { font-size: 1.9rem; font-weight: 900; color: white; letter-spacing: 3px; text-transform: uppercase; }
+    .card-header .tagline { font-size: 0.72rem; color: rgba(200,220,245,0.82); letter-spacing: 2px; margin-top: 5px; text-transform: uppercase; }
     .accent-bar { height: 5px; background: linear-gradient(90deg, #c8922a, #e8b84b, #c8922a); }
-
-    /* Body */
-    .card-body { padding: 24px 26px 20px; }
+    .card-body { padding: 22px 24px 18px; }
 
     .section-label {
-      font-size: 0.67rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: #a0aec0;
-      margin-bottom: 10px;
-      margin-top: 22px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
+      font-size: 0.67rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1.2px; color: #a0aec0; margin-bottom: 10px; margin-top: 20px;
+      display: flex; align-items: center; gap: 7px;
     }
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #e2e8f0;
-    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
     .section-label:first-child { margin-top: 0; }
 
-    /* Fields */
     .row { display: grid; gap: 12px; margin-bottom: 12px; }
     .row.col2 { grid-template-columns: 1fr 1fr; }
     .row.col3 { grid-template-columns: 1fr 1fr 1fr; }
     .row.col1 { grid-template-columns: 1fr; }
 
     .field { display: flex; flex-direction: column; gap: 4px; }
-    .field label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: #718096;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .field input,
-    .field select {
-      padding: 10px 12px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-family: inherit;
-      color: #2d3748;
-      background: white;
-      transition: border-color 0.18s, box-shadow 0.18s;
-      width: 100%;
-      appearance: none;
-      -webkit-appearance: none;
+    .field label { font-size: 0.68rem; font-weight: 700; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
+    .field .err { font-size: 0.7rem; color: #e53e3e; display: none; margin-top: 2px; }
+    .field input, .field select {
+      padding: 10px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+      font-size: 0.9rem; font-family: inherit; color: #2d3748; background: white;
+      transition: border-color 0.18s, box-shadow 0.18s; width: 100%;
     }
     .field select {
+      appearance: none; -webkit-appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 34px;
+      background-repeat: no-repeat; background-position: right 12px center; padding-right: 34px;
     }
-    .field input:focus, .field select:focus {
-      outline: none;
-      border-color: #1a3c5e;
-      box-shadow: 0 0 0 3px rgba(26,60,94,0.1);
-    }
-    .field input[readonly] {
-      background: #f7fafc;
-      color: #4a5568;
-      cursor: default;
-    }
-    .field select:disabled {
-      background-color: #f7fafc;
-      color: #a0aec0;
-      cursor: not-allowed;
-    }
+    .field input:focus, .field select:focus { outline: none; border-color: #1a3c5e; box-shadow: 0 0 0 3px rgba(26,60,94,0.1); }
+    .field input.has-error { border-color: #e53e3e !important; }
+    .field input[readonly] { background: #f7fafc; color: #4a5568; cursor: default; }
+    .field select:disabled { background-color: #f7fafc; color: #a0aec0; cursor: not-allowed; }
 
-    /* Quotation number display */
     .quot-display {
-      background: #ebf4ff;
-      border: 1.5px solid #bee3f8;
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #1a3c5e;
-      letter-spacing: 0.8px;
-      font-family: 'Courier New', monospace;
+      background: #ebf4ff; border: 1.5px solid #bee3f8; border-radius: 8px;
+      padding: 10px 12px; font-size: 0.88rem; font-weight: 700; color: #1a3c5e;
+      letter-spacing: 0.8px; font-family: 'Courier New', monospace;
     }
 
     /* Unit chip */
     .unit-chip {
-      display: none;
-      align-items: center;
-      gap: 6px;
-      background: #f0fff4;
-      border: 1.5px solid #9ae6b4;
-      border-radius: 30px;
-      padding: 6px 14px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #276749;
-      margin-bottom: 14px;
+      display: none; align-items: center; gap: 6px; background: #f0fff4;
+      border: 1.5px solid #9ae6b4; border-radius: 30px; padding: 6px 14px;
+      font-size: 0.8rem; font-weight: 700; color: #276749; margin-bottom: 14px;
     }
     .unit-chip.show { display: inline-flex; }
+
+    /* Rate / amount / toggle section */
+    .adjust-section { display: none; }
+    .adjust-section.show { display: block; }
+
+    /* Female toggle */
+    .female-row {
+      display: flex; align-items: center; gap: 10px; padding: 9px 13px;
+      background: #fdf6ec; border: 1.5px solid #f6d860; border-radius: 9px;
+      margin-top: 4px; margin-bottom: 14px; cursor: pointer;
+    }
+    .toggle-sw { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+    .toggle-sw input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background: #cbd5e0; border-radius: 22px; transition: .25s;
+    }
+    .toggle-track::before {
+      position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+      background: white; border-radius: 50%; transition: .25s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    input:checked + .toggle-track { background: #c8922a; }
+    input:checked + .toggle-track::before { transform: translateX(18px); }
+    .toggle-lbl { font-size: 0.82rem; font-weight: 600; color: #744210; user-select: none; line-height: 1.3; }
 
     /* Pricing table */
     .pricing-wrap { display: none; }
     .pricing-wrap.show { display: block; }
-
-    .pricing-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.82rem;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(26,60,94,0.08);
-    }
-    .pricing-table thead tr th {
-      background: #1a3c5e;
-      color: white;
-      padding: 9px 12px;
-      text-align: left;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-    }
-    .pricing-table thead tr th:last-child { text-align: right; }
-    .pricing-table tbody tr td {
-      padding: 9px 12px;
-      border-bottom: 1px solid #edf2f7;
-      color: #4a5568;
-      vertical-align: middle;
-    }
-    .pricing-table tbody tr td:first-child {
-      font-weight: 800;
-      color: #1a3c5e;
-      width: 24px;
-    }
-    .pricing-table tbody tr td:last-child {
-      text-align: right;
-      font-weight: 700;
-      color: #2d3748;
-      font-variant-numeric: tabular-nums;
-    }
+    .pricing-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,60,94,0.08); }
+    .pricing-table thead th { background: #1a3c5e; color: white; padding: 9px 12px; text-align: left; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; }
+    .pricing-table thead th:last-child { text-align: right; }
+    .pricing-table tbody td { padding: 8px 12px; border-bottom: 1px solid #edf2f7; color: #4a5568; vertical-align: middle; }
+    .pricing-table tbody td:first-child { font-weight: 800; color: #1a3c5e; width: 24px; }
+    .pricing-table tbody td:last-child { text-align: right; font-weight: 700; color: #2d3748; white-space: nowrap; }
     .pricing-table tbody tr:nth-child(even) td { background: #f7fafc; }
-    .pricing-table tbody tr.row-subtotal td {
-      background: #ebf4ff !important;
-      font-weight: 700;
-      color: #1a3c5e;
-    }
-    .pricing-table tbody tr.row-subtotal td:first-child { color: #1a3c5e; }
-    .pricing-table tbody tr.row-grand td {
-      background: #1a3c5e !important;
-      color: white;
-      font-weight: 800;
-      font-size: 0.9rem;
-      border-bottom: none;
-    }
-    .pricing-table .note-cell {
-      font-size: 0.7rem;
-      color: #a0aec0;
-      font-weight: 400;
-      display: block;
-      margin-top: 1px;
-    }
+    .pricing-table tbody tr.subtotal td { background: #ebf4ff !important; font-weight: 700; color: #1a3c5e; }
+    .pricing-table tbody tr.grand td { background: #1a3c5e !important; color: white; font-weight: 800; font-size: 0.9rem; border-bottom: none; }
+    .sub-note { font-size: 0.69rem; color: #a0aec0; font-weight: 400; display: block; margin-top: 1px; }
 
-    /* Booking footnote */
+    /* Booking note */
     .booking-note {
-      display: none;
-      background: #fffbeb;
-      border: 1.5px solid #f6e05e;
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-top: 14px;
-      font-size: 0.82rem;
-      color: #744210;
+      background: #fffbeb; border: 1.5px solid #f6e05e; border-radius: 10px;
+      padding: 11px 13px; margin-top: 12px; font-size: 0.82rem; color: #744210;
+      display: flex; gap: 8px; align-items: flex-start;
     }
-    .booking-note.show { display: flex; gap: 8px; align-items: flex-start; }
-    .booking-note strong { color: #92400e; }
 
     /* Actions */
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px solid #e2e8f0;
+    .actions { display: flex; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+    .btn-dl {
+      flex: 1; background: #1a3c5e; color: white; border: none; border-radius: 9px;
+      padding: 13px 16px; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;
     }
-    .btn-download {
-      flex: 1;
-      background: #1a3c5e;
-      color: white;
-      border: none;
-      border-radius: 9px;
-      padding: 13px 16px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s;
-      letter-spacing: 0.3px;
+    .btn-dl:hover:not(:disabled) { background: #122c47; box-shadow: 0 4px 14px rgba(26,60,94,0.3); }
+    .btn-dl:disabled { background: #cbd5e0; cursor: not-allowed; }
+    .btn-cl {
+      background: white; color: #718096; border: 1.5px solid #e2e8f0; border-radius: 9px;
+      padding: 13px 18px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
     }
-    .btn-download:hover:not(:disabled) {
-      background: #122c47;
-      box-shadow: 0 4px 14px rgba(26,60,94,0.3);
-    }
-    .btn-download:disabled {
-      background: #cbd5e0;
-      cursor: not-allowed;
-    }
-    .btn-clear {
-      background: white;
-      color: #718096;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 9px;
-      padding: 13px 18px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-clear:hover {
-      border-color: #fc8181;
-      color: #e53e3e;
-      background: #fff5f5;
-    }
+    .btn-cl:hover { border-color: #fc8181; color: #e53e3e; background: #fff5f5; }
 
-    /* Disclaimer */
-    .disclaimer {
-      font-size: 0.68rem;
-      color: #a0aec0;
-      text-align: center;
-      margin-top: 20px;
-      line-height: 1.6;
-      padding: 0 4px;
-    }
+    .disclaimer { font-size: 0.68rem; color: #a0aec0; text-align: center; margin-top: 18px; line-height: 1.6; }
   </style>
 </head>
 <body>
 
 <div class="card">
-
-  <!-- Header -->
   <div class="card-header">
     <h1>Golden Legacy</h1>
     <div class="tagline">Quotation Generator &nbsp;·&nbsp; Wing B</div>
@@ -303,7 +150,7 @@
 
   <div class="card-body">
 
-    <!-- Quotation Info -->
+    <!-- Quotation Details -->
     <div class="section-label">Quotation Details</div>
     <div class="row col2">
       <div class="field">
@@ -316,12 +163,13 @@
       </div>
     </div>
 
-    <!-- Customer -->
+    <!-- Customer Details -->
     <div class="section-label">Customer Details</div>
     <div class="row col1">
       <div class="field">
         <label>Customer Name *</label>
-        <input type="text" id="custName" placeholder="Full Name">
+        <input type="text" id="custName" placeholder="Full Name" oninput="clearNameErr()">
+        <span class="err" id="nameErr">Customer name is required to generate a quotation.</span>
       </div>
     </div>
     <div class="row col2">
@@ -348,7 +196,7 @@
       </div>
       <div class="field">
         <label>Floor *</label>
-        <select id="floorSelect" onchange="onFloorChange()">
+        <select id="floorSel" onchange="onFloor()">
           <option value="">Select</option>
         </select>
       </div>
@@ -356,19 +204,40 @@
     <div class="row col1">
       <div class="field">
         <label>Flat Number *</label>
-        <select id="flatSelect" onchange="onFlatChange()" disabled>
+        <select id="flatSel" onchange="onFlat()" disabled>
           <option value="">Select Floor First</option>
         </select>
       </div>
     </div>
 
-    <!-- Unit chip (shown after flat selected) -->
+    <!-- Unit chip -->
     <div class="unit-chip" id="unitChip">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-      <span id="unitChipText"></span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      <span id="chipTxt"></span>
     </div>
 
-    <!-- Pricing -->
+    <!-- Rate / Amount / Toggle -->
+    <div class="adjust-section" id="adjustSec">
+      <div class="row col2" style="margin-bottom:10px">
+        <div class="field">
+          <label>Rate ₹ / sq.ft. &nbsp;(B)</label>
+          <input type="text" id="rateInp" placeholder="0.00" oninput="onRate()" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label>Base Amount ₹ &nbsp;(C = A×B)</label>
+          <input type="text" id="amtInp" placeholder="0" oninput="onAmt()" inputmode="numeric">
+        </div>
+      </div>
+      <label class="female-row" for="femaleTog">
+        <div class="toggle-sw">
+          <input type="checkbox" id="femaleTog" onchange="recalc()">
+          <span class="toggle-track"></span>
+        </div>
+        <span class="toggle-lbl">All buyers are female &nbsp;–&nbsp; Stamp Duty @ 5% &nbsp;<span style="font-weight:400;font-size:0.76rem">(1% concession)</span></span>
+      </label>
+    </div>
+
+    <!-- Pricing breakdown -->
     <div class="pricing-wrap" id="pricingWrap">
       <table class="pricing-table">
         <thead>
@@ -379,471 +248,403 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>A</td>
-            <td>Total Usable Area<span class="note-cell" id="areaNote"></span></td>
-            <td id="pr-area">—</td>
-          </tr>
-          <tr>
-            <td>B</td>
-            <td>Rate per sq.ft.</td>
-            <td id="pr-rate">—</td>
-          </tr>
-          <tr>
-            <td>C</td>
-            <td>Base Amount <span class="note-cell">A × B</span></td>
-            <td id="pr-amount">—</td>
-          </tr>
-          <tr>
-            <td>D</td>
-            <td>Maintenance Charges <span class="note-cell">3 years from date of possession</span></td>
-            <td id="pr-maint">₹90,000</td>
-          </tr>
-          <tr>
-            <td>E</td>
-            <td>Legal Fees <span class="note-cell">Reg. Agreement to Sale &amp; Sale Deed</span></td>
-            <td id="pr-legal">₹20,000</td>
-          </tr>
-          <tr>
-            <td>F</td>
-            <td>Infrastructure Cost <span class="note-cell">Roads, drainage, utilities &amp; landscaping</span></td>
-            <td id="pr-infra">—</td>
-          </tr>
-          <tr class="row-subtotal">
-            <td>G</td>
-            <td><strong>Sub-Total</strong> <span class="note-cell" style="color:#5a89b8">C + D + E + F</span></td>
-            <td id="pr-total">—</td>
-          </tr>
-          <tr>
-            <td>H</td>
-            <td>Stamp Duty + Registration Fees <span class="note-cell">6% of C + Reg. Fees (capped ₹30,000) · 1% concession for female buyer(s)</span></td>
-            <td id="pr-stamp">—</td>
-          </tr>
-          <tr>
-            <td>J</td>
-            <td>GST <span class="note-cell">5% of C as per prevailing GST norms</span></td>
-            <td id="pr-gst">—</td>
-          </tr>
-          <tr class="row-grand">
-            <td></td>
-            <td>Grand Total (MRP) &nbsp;<span style="font-size:0.72rem;font-weight:500;opacity:0.8">G + H + J</span></td>
-            <td id="pr-mrp">—</td>
-          </tr>
+          <tr><td>A</td><td>Total Usable Area</td><td id="pr-area">—</td></tr>
+          <tr><td>B</td><td>Rate per sq.ft.</td><td id="pr-rate">—</td></tr>
+          <tr><td>C</td><td>Base Amount <span class="sub-note">A × B</span></td><td id="pr-amt">—</td></tr>
+          <tr><td>D</td><td>Maintenance Charges <span class="sub-note">3 years from possession</span></td><td id="pr-maint">₹90,000</td></tr>
+          <tr><td>E</td><td>Legal Fees <span class="sub-note">Reg. Agreement to Sale &amp; Sale Deed</span></td><td id="pr-legal">₹20,000</td></tr>
+          <tr><td>F</td><td>Infrastructure Cost <span class="sub-note">Roads, drainage, utilities &amp; landscaping</span></td><td id="pr-infra">—</td></tr>
+          <tr class="subtotal"><td>G</td><td><strong>Sub-Total</strong> <span class="sub-note" style="color:#5a89b8">C + D + E + F</span></td><td id="pr-sub">—</td></tr>
+          <tr><td>H</td><td>Stamp Duty + Registration <span class="sub-note" id="stampNote">6% of C + Reg. Fees (capped ₹30,000)</span></td><td id="pr-stamp">—</td></tr>
+          <tr><td>J</td><td>GST <span class="sub-note">5% of C · as per prevailing norms</span></td><td id="pr-gst">—</td></tr>
+          <tr class="grand"><td></td><td>Grand Total (MRP) <span style="font-size:0.72rem;font-weight:500;opacity:0.8">G + H + J</span></td><td id="pr-mrp">—</td></tr>
         </tbody>
       </table>
 
-      <!-- Booking footnote -->
-      <div class="booking-note show" id="bookingNote">
+      <div class="booking-note">
         <span>💡</span>
         <div>
           <strong>Booking Amount: ₹1,00,000/-</strong> (Rupees One Lakh Only) to be paid at the time of booking.<br>
-          <span style="font-size:0.75rem;color:#92400e;margin-top:2px;display:block">Detailed milestone-based payment plan shall be provided along with the Allotment Letter.</span>
+          <span style="font-size:0.75rem;color:#92400e;display:block;margin-top:2px">Detailed milestone-based payment plan shall be provided along with the Allotment Letter.</span>
         </div>
       </div>
     </div>
 
     <!-- Actions -->
     <div class="actions">
-      <button class="btn-download" id="downloadBtn" onclick="generatePDF()" disabled>
+      <button class="btn-dl" id="dlBtn" onclick="genPDF()" disabled>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download Quotation PDF
       </button>
-      <button class="btn-clear" onclick="clearForm()">Clear</button>
+      <button class="btn-cl" onclick="clearAll()">Clear</button>
     </div>
 
-  </div><!-- /card-body -->
+  </div>
 </div>
 
 <div class="disclaimer">
-  Prices effective WEF 28.04.2026 · Subject to revision without prior notice<br>
+  Prices effective WEF 05.05.2026 · Subject to revision without prior notice<br>
   This quotation is for information purposes only and does not constitute an offer or contract.
 </div>
 
 <script>
   const { jsPDF } = window.jspdf;
 
-  // ─────────────────────────────────────────────
-  // PRICE DATA
-  // Flat unit positions: 1–8 per floor
-  // BHK type: 01,04,05,08 = 3BHK; 02,03,06,07 = 2BHK
-  // Rates by floor tier and position group
-  // ─────────────────────────────────────────────
-  function getFlatData(floor, unit) {
-    const f = parseInt(floor);
-    const u = parseInt(unit);
+  // ── State ──
+  let curFloor = '', curUnit = '', curType = '', curArea = 0, curP = null;
 
-    const is3BHK = (u === 1 || u === 4 || u === 5 || u === 8);
-    const type   = is3BHK ? '3BHK' : '2BHK';
-    const area   = is3BHK ? 1540 : 1180;
-    const posLow = (u <= 4); // positions 1–4 vs 5–8
-
+  // ── Price base data (WEF 05.05.2026) ──
+  // 3BHK = 1540 sqft · 2BHK = 1185 sqft
+  // positions 01,04,05,08 = 3BHK · 02,03,06,07 = 2BHK
+  // rate tiers: F1-4 low=4590/high=4640, F5-8 low=4640/high=4690, F9-16 low=4690/high=4740
+  function baseData(floor, unit) {
+    const f = +floor, u = +unit;
+    const is3 = (u===1||u===4||u===5||u===8);
+    const type = is3 ? '3BHK' : '2BHK';
+    const area = is3 ? 1540 : 1185;
+    const low  = (u <= 4);
     let rate;
-    if      (f <= 4)  { rate = posLow ? 4590 : 4640; }
-    else if (f <= 8)  { rate = posLow ? 4640 : 4690; }
-    else              { rate = posLow ? 4690 : 4740; }
-
-    const infra    = is3BHK ? 250000 : 200000;
-    const maint    = 90000;
-    const legal    = 20000;
-    const amount   = area * rate;
-    const subtotal = amount + maint + legal + infra;
-    const stamp    = Math.round(amount * 0.06) + 30000;
-    const gst      = Math.round(amount * 0.05);
-    const mrp      = subtotal + stamp + gst;
-
-    return { type, area, rate, amount, maint, legal, infra, subtotal, stamp, gst, mrp };
+    if      (f <= 4)  rate = low ? 4590 : 4640;
+    else if (f <= 8)  rate = low ? 4640 : 4690;
+    else              rate = low ? 4690 : 4740;
+    return { type, area, rate };
   }
 
-  // ─────────────────────────────────────────────
-  // QUOTATION NUMBER  (counter stored in localStorage)
-  // ─────────────────────────────────────────────
-  function currentQuotNum() {
-    const counter = parseInt(localStorage.getItem('gl_quot_counter') || '1');
+  // ── Compute all charges from base amount ──
+  function compute(amount, type, isFemale) {
+    const sdr  = isFemale ? 5 : 6;
+    const infra = type==='3BHK' ? 250000 : 200000;
+    const sub  = amount + 90000 + 20000 + infra;
+    const stRaw = amount * sdr / 100 + 30000;
+    const stamp = Math.ceil(stRaw / 100) * 100;   // round UP to nearest 100
+    const gst   = Math.round(amount * 0.05);
+    const mrp   = sub + stamp + gst;
+    return { sdr, infra, sub, stamp, gst, mrp };
+  }
+
+  // ── Quotation counter (localStorage) ──
+  function quotNum() {
+    const c = +(localStorage.getItem('gl_quot_counter')||1);
     const d = new Date();
     const yy = String(d.getFullYear()).slice(2);
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `QUOT-GL-${counter}-${yy}${mm}${dd}`;
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const dd = String(d.getDate()).padStart(2,'0');
+    return `QUOT-GL-${c}-${yy}${mm}${dd}`;
+  }
+  function bump() {
+    localStorage.setItem('gl_quot_counter', String(+(localStorage.getItem('gl_quot_counter')||1)+1));
   }
 
-  function bumpCounter() {
-    const c = parseInt(localStorage.getItem('gl_quot_counter') || '1');
-    localStorage.setItem('gl_quot_counter', String(c + 1));
+  // ── Helpers ──
+  const inr   = n => '₹' + Math.round(n).toLocaleString('en-IN');
+  const rsPdf = n => 'Rs.' + Math.round(n).toLocaleString('en-IN');
+  const set   = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  const fn    = (f,u)  => `${f}${String(+u).padStart(2,'0')}`;
+
+  // ── Validate inputs ──
+  function cleanRate(inp) {
+    let v = inp.value.replace(/[^\d.]/g,'');
+    const p = v.split('.');
+    if (p.length > 2) v = p[0]+'.'+p.slice(1).join('');
+    if (p.length === 2) v = p[0]+'.'+p[1].slice(0,2);
+    inp.value = v;
+  }
+  function cleanAmt(inp) {
+    inp.value = inp.value.replace(/[^\d]/g,'');   // whole numbers only
   }
 
-  // ─────────────────────────────────────────────
-  // HELPERS
-  // ─────────────────────────────────────────────
-  const inr = n => '₹' + Number(n).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-
-  function flatNumber(floor, unit) {
-    return `${floor}${String(parseInt(unit)).padStart(2, '0')}`;
-  }
-
-  // ─────────────────────────────────────────────
-  // INIT
-  // ─────────────────────────────────────────────
+  // ── Init ──
   document.addEventListener('DOMContentLoaded', () => {
-    // Date display
-    const today = new Date();
     document.getElementById('quotDate').value =
-      today.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-
-    // Quotation number
-    document.getElementById('quotNumber').textContent = currentQuotNum();
-
-    // Floor dropdown
-    const sel = document.getElementById('floorSelect');
-    for (let i = 1; i <= 16; i++) {
-      const o = document.createElement('option');
-      o.value = i; o.textContent = `Floor ${i}`;
-      sel.appendChild(o);
+      new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+    document.getElementById('quotNumber').textContent = quotNum();
+    const sel = document.getElementById('floorSel');
+    for (let i=1;i<=16;i++) {
+      const o=document.createElement('option'); o.value=i; o.textContent=`Floor ${i}`; sel.appendChild(o);
     }
   });
 
-  // ─────────────────────────────────────────────
-  // FLOOR CHANGE → populate flat dropdown
-  // ─────────────────────────────────────────────
-  function onFloorChange() {
-    const floor = document.getElementById('floorSelect').value;
-    const flatSel = document.getElementById('flatSelect');
-
-    flatSel.innerHTML = '<option value="">Select Flat</option>';
-    flatSel.disabled = !floor;
-    hidePricing();
-
+  // ── Floor change ──
+  function onFloor() {
+    const floor = document.getElementById('floorSel').value;
+    const fs = document.getElementById('flatSel');
+    fs.innerHTML = '<option value="">Select Flat</option>';
+    fs.disabled = !floor;
+    hideAll();
     if (!floor) return;
-
-    for (let u = 1; u <= 8; u++) {
-      const fn   = flatNumber(floor, u);
-      const data = getFlatData(floor, u);
-      const o    = document.createElement('option');
-      o.value = u;
-      o.textContent = `${fn}  —  ${data.type}`;
-      flatSel.appendChild(o);
+    for (let u=1;u<=8;u++) {
+      const {type} = baseData(floor,u);
+      const o = document.createElement('option');
+      o.value=u; o.textContent=`${fn(floor,u)}  —  ${type}`; fs.appendChild(o);
     }
   }
 
-  // ─────────────────────────────────────────────
-  // FLAT CHANGE → fill pricing
-  // ─────────────────────────────────────────────
-  function onFlatChange() {
-    const floor = document.getElementById('floorSelect').value;
-    const unit  = document.getElementById('flatSelect').value;
+  // ── Flat change ──
+  function onFlat() {
+    const floor = document.getElementById('floorSel').value;
+    const unit  = document.getElementById('flatSel').value;
+    if (!floor||!unit) { hideAll(); return; }
 
-    if (!floor || !unit) { hidePricing(); return; }
-
-    const d  = getFlatData(floor, unit);
-    const fn = flatNumber(floor, unit);
+    const b = baseData(floor,unit);
+    curFloor=floor; curUnit=unit; curType=b.type; curArea=b.area;
 
     // Unit chip
-    const chip = document.getElementById('unitChip');
-    document.getElementById('unitChipText').textContent =
-      `Wing B · Floor ${floor} · Flat ${fn} · ${d.type} · ${d.area.toLocaleString('en-IN')} sq.ft.`;
-    chip.classList.add('show');
+    document.getElementById('chipTxt').textContent =
+      `Wing B · Floor ${floor} · Flat ${fn(floor,unit)} · ${b.type} · ${b.area.toLocaleString('en-IN')} sq.ft.`;
+    document.getElementById('unitChip').classList.add('show');
 
-    // Fill table
-    set('pr-area',   `${d.area.toLocaleString('en-IN')} sq.ft.`);
-    set('pr-rate',   `₹${d.rate.toLocaleString('en-IN')} /sq.ft.`);
-    set('pr-amount', inr(d.amount));
-    set('pr-maint',  inr(d.maint));
-    set('pr-legal',  inr(d.legal));
-    set('pr-infra',  inr(d.infra));
-    set('pr-total',  inr(d.subtotal));
-    set('pr-stamp',  inr(d.stamp));
-    set('pr-gst',    inr(d.gst));
-    set('pr-mrp',    inr(d.mrp));
+    // Pre-fill rate & amount
+    document.getElementById('rateInp').value = b.rate.toFixed(2);
+    document.getElementById('amtInp').value  = b.area * b.rate;
 
+    // Show sections
+    document.getElementById('adjustSec').classList.add('show');
     document.getElementById('pricingWrap').classList.add('show');
-    document.getElementById('downloadBtn').disabled = false;
+    document.getElementById('dlBtn').disabled = false;
+
+    recalc();
   }
 
-  function hidePricing() {
+  // ── Rate edited → update amount ──
+  function onRate() {
+    cleanRate(document.getElementById('rateInp'));
+    const rate = +document.getElementById('rateInp').value || 0;
+    document.getElementById('amtInp').value = Math.round(rate * curArea);
+    recalc();
+  }
+
+  // ── Amount edited → update rate ──
+  function onAmt() {
+    cleanAmt(document.getElementById('amtInp'));
+    const amt = +document.getElementById('amtInp').value || 0;
+    document.getElementById('rateInp').value = curArea ? (amt/curArea).toFixed(2) : '0.00';
+    recalc();
+  }
+
+  // ── Recalculate everything ──
+  function recalc() {
+    if (!curArea) return;
+    const rate     = +document.getElementById('rateInp').value || 0;
+    const amount   = +document.getElementById('amtInp').value  || 0;
+    const isFemale = document.getElementById('femaleTog').checked;
+    const p        = compute(amount, curType, isFemale);
+
+    set('pr-area',  `${curArea.toLocaleString('en-IN')} sq.ft.`);
+    set('pr-rate',  `₹${rate.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}/sq.ft.`);
+    set('pr-amt',   inr(amount));
+    set('pr-maint', inr(90000));
+    set('pr-legal', inr(20000));
+    set('pr-infra', inr(p.infra));
+    set('pr-sub',   inr(p.sub));
+    set('pr-stamp', inr(p.stamp));
+    set('pr-gst',   inr(p.gst));
+    set('pr-mrp',   inr(p.mrp));
+
+    document.getElementById('stampNote').textContent =
+      `${p.sdr}% of C + Reg. Fees (capped ₹30,000)${isFemale ? ' · Female buyer(s) – 1% concession' : ''}`;
+
+    curP = { rate, amount, isFemale, ...p };
+  }
+
+  // ── Hide everything ──
+  function hideAll() {
+    document.getElementById('adjustSec').classList.remove('show');
     document.getElementById('pricingWrap').classList.remove('show');
     document.getElementById('unitChip').classList.remove('show');
-    document.getElementById('downloadBtn').disabled = true;
+    document.getElementById('dlBtn').disabled = true;
+    curFloor=''; curUnit=''; curType=''; curArea=0; curP=null;
   }
 
-  // ─────────────────────────────────────────────
-  // CLEAR
-  // ─────────────────────────────────────────────
-  function clearForm() {
-    ['custName', 'custPhone', 'custEmail'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-    document.getElementById('floorSelect').value = '';
-    document.getElementById('flatSelect').innerHTML = '<option value="">Select Floor First</option>';
-    document.getElementById('flatSelect').disabled = true;
-    hidePricing();
+  // ── Name error handling ──
+  function clearNameErr() {
+    document.getElementById('custName').classList.remove('has-error');
+    document.getElementById('nameErr').style.display='none';
   }
 
-  // ─────────────────────────────────────────────
-  // GENERATE PDF
-  // ─────────────────────────────────────────────
-  function generatePDF() {
-    const floor = document.getElementById('floorSelect').value;
-    const unit  = document.getElementById('flatSelect').value;
-    if (!floor || !unit) return;
+  // ── Clear form ──
+  function clearAll() {
+    ['custName','custPhone','custEmail'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('floorSel').value='';
+    document.getElementById('flatSel').innerHTML='<option value="">Select Floor First</option>';
+    document.getElementById('flatSel').disabled=true;
+    document.getElementById('femaleTog').checked=false;
+    clearNameErr();
+    hideAll();
+  }
 
-    const d    = getFlatData(floor, unit);
-    const fn   = flatNumber(floor, unit);
-    const qNum = currentQuotNum();
+  // ── Generate PDF ──
+  function genPDF() {
+    // Validate name
+    const name = document.getElementById('custName').value.trim();
+    if (!name) {
+      document.getElementById('custName').classList.add('has-error');
+      document.getElementById('nameErr').style.display='block';
+      document.getElementById('custName').focus();
+      return;
+    }
+    if (!curP || !curFloor || !curUnit) return;
 
-    const custName  = document.getElementById('custName').value.trim()  || 'Prospective Buyer';
-    const custPhone = document.getElementById('custPhone').value.trim();
-    const custEmail = document.getElementById('custEmail').value.trim();
+    const p      = curP;
+    const flat   = fn(curFloor, curUnit);
+    const qn     = quotNum();
+    const phone  = document.getElementById('custPhone').value.trim();
+    const email  = document.getElementById('custEmail').value.trim();
+    const dStr   = new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
 
-    const today   = new Date();
-    const dateStr = today.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+    const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const W=210, ML=16, MR=16;
+    const PC=[26,60,94], AC=[200,146,42], LB=[245,247,250];
 
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const W = 210, ML = 18, MR = 18;
-    const PC = [26, 60, 94];
-    const AC = [200, 146, 42];
-    const LB = [245, 247, 250];
+    // ── HEADER (0–38mm) ──
+    doc.setFillColor(...PC); doc.rect(0,0,W,38,'F');
+    doc.setFillColor(...AC); doc.rect(0,38,W,3.5,'F');
 
-    // ── Header ──────────────────────────────────
-    doc.setFillColor(...PC);
-    doc.rect(0, 0, W, 48, 'F');
-    doc.setFillColor(...AC);
-    doc.rect(0, 48, W, 4.5, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(22);
+    doc.setTextColor(255,255,255);
+    doc.text('GOLDEN LEGACY', W/2, 16, {align:'center'});
 
-    // Company name
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(24);
-    doc.setTextColor(255, 255, 255);
-    doc.text('GOLDEN LEGACY', W / 2, 20, { align: 'center' });
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    doc.setTextColor(175,210,240);
+    doc.text('Q U O T A T I O N', W/2, 24, {align:'center'});
 
-    // Subtitle
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.setTextColor(180, 215, 245);
-    doc.text('QUOTATION', W / 2, 28, { align: 'center', charSpace: 3 });
+    doc.setDrawColor(...AC); doc.setLineWidth(0.2);
+    doc.line(ML,29,W-MR,29);
 
-    // Thin gold divider
-    doc.setDrawColor(...AC);
-    doc.setLineWidth(0.25);
-    doc.line(ML, 33, W - MR, 33);
+    doc.setFontSize(7.5); doc.setTextColor(155,200,235);
+    doc.text(`No: ${qn}`, ML, 36);
+    doc.text(`Date: ${dStr}`, W-MR, 36, {align:'right'});
 
-    // Quot no + date
-    doc.setFontSize(8);
-    doc.setTextColor(160, 205, 240);
-    doc.text(`No: ${qNum}`, ML, 40);
-    doc.text(`Date: ${dateStr}`, W - MR, 40, { align: 'right' });
-
-    // ── Info Boxes ──────────────────────────────
-    let y = 60;
-    const bW = (W - ML - MR - 6) / 2;
+    // ── INFO BOXES (48–74mm) ──
+    let y = 48;
+    const bW = (W-ML-MR-5)/2;
 
     // Customer box
-    doc.setFillColor(...LB);
-    doc.roundedRect(ML, y, bW, 34, 3, 3, 'F');
-    doc.setFillColor(...AC);
-    doc.rect(ML, y, 2.5, 34, 'F');
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(6.5);
-    doc.setTextColor(...PC);
-    doc.text('PREPARED FOR', ML + 6, y + 7);
-
-    doc.setFontSize(10);
-    doc.text(custName, ML + 6, y + 15);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.setTextColor(70, 70, 70);
-    let cy = y + 22;
-    if (custPhone) { doc.text(custPhone, ML + 6, cy); cy += 6; }
-    if (custEmail) { doc.text(custEmail, ML + 6, cy); }
+    doc.setFillColor(...LB); doc.roundedRect(ML,y,bW,26,2.5,2.5,'F');
+    doc.setFillColor(...AC); doc.rect(ML,y,2,26,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(...PC);
+    doc.text('PREPARED FOR', ML+5, y+6);
+    doc.setFontSize(10); doc.text(name, ML+5, y+13);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(70,70,70);
+    let cy=y+19;
+    if (phone) { doc.text(phone, ML+5, cy); cy+=5.5; }
+    if (email) { doc.text(email, ML+5, cy); }
 
     // Unit box
-    const b2 = ML + bW + 6;
-    doc.setFillColor(...LB);
-    doc.roundedRect(b2, y, bW, 34, 3, 3, 'F');
-    doc.setFillColor(...PC);
-    doc.rect(b2, y, 2.5, 34, 'F');
+    const b2=ML+bW+5;
+    doc.setFillColor(...LB); doc.roundedRect(b2,y,bW,26,2.5,2.5,'F');
+    doc.setFillColor(...PC); doc.rect(b2,y,2,26,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(...PC);
+    doc.text('UNIT DETAILS', b2+5, y+6);
+    doc.setFontSize(10); doc.text(`Wing B  –  Flat ${flat}`, b2+5, y+13);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(70,70,70);
+    doc.text('Golden Legacy', b2+5, y+19);
+    doc.text(`${curType}  ·  Floor ${curFloor}  ·  ${curArea.toLocaleString('en-IN')} sq.ft.`, b2+5, y+24.5);
+    if (p.isFemale) {
+      doc.setTextColor(...AC); doc.setFontSize(6.5);
+      doc.text('Female buyer(s) · 5% Stamp Duty applied', b2+5, y+26);
+    }
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(6.5);
-    doc.setTextColor(...PC);
-    doc.text('UNIT DETAILS', b2 + 6, y + 7);
+    // ── PRICE TABLE (starts ~82mm) ──
+    y += 32;
 
-    doc.setFontSize(10);
-    doc.text(`Wing B  –  Flat ${fn}`, b2 + 6, y + 15);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.setTextColor(70, 70, 70);
-    doc.text('Golden Legacy', b2 + 6, y + 22);
-    doc.text(`${d.type}  ·  Floor ${floor}  ·  ${d.area.toLocaleString('en-IN')} sq.ft.`, b2 + 6, y + 29);
-
-    // ── Price Table ──────────────────────────────
-    y += 42;
+    const sdDesc = `${p.sdr}% of C + Reg. Fees (capped Rs.30,000)${p.isFemale?' [Female buyer(s)]':''}`;
 
     doc.autoTable({
       startY: y,
-      margin: { left: ML, right: MR },
-      head: [['', 'Description', 'Amount']],
+      margin: {left:ML, right:MR},
+      head: [['','Description','Amount']],
       body: [
-        ['A', 'Total Usable Area',              `${d.area.toLocaleString('en-IN')} sq.ft.`],
-        ['B', 'Rate (per sq.ft.)',               `₹${d.rate.toLocaleString('en-IN')}`],
-        ['C', 'Base Amount  (A × B)',       `₹${d.amount.toLocaleString('en-IN')}`],
-        ['D', 'Maintenance Charges\n(3 years from date of possession)', `₹${d.maint.toLocaleString('en-IN')}`],
-        ['E', 'Legal Fees\n(Reg. Agreement to Sale & Sale Deed)',        `₹${d.legal.toLocaleString('en-IN')}`],
-        ['F', 'Infrastructure Cost\n(Roads, drainage, utilities & landscaping)', `₹${d.infra.toLocaleString('en-IN')}`],
-        ['G', 'Sub-Total  (C+D+E+F)',            `₹${d.subtotal.toLocaleString('en-IN')}`],
-        ['H', 'Stamp Duty + Registration Fees\n(6% of C + Reg. Fees capped ₹30,000)', `₹${d.stamp.toLocaleString('en-IN')}`],
-        ['J', 'GST  (5% of C)',                 `₹${d.gst.toLocaleString('en-IN')}`],
-        ['',  'GRAND TOTAL  (G+H+J)',            `₹${d.mrp.toLocaleString('en-IN')}`],
+        ['A', 'Total Usable Area',                  `${curArea.toLocaleString('en-IN')} sq.ft.`],
+        ['B', 'Rate (per sq.ft.)',                   `Rs.${p.rate.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}`],
+        ['C', 'Base Amount  (A x B)',                rsPdf(p.amount)],
+        ['D', 'Maintenance Charges  (3 yrs)',        rsPdf(90000)],
+        ['E', 'Legal Fees',                          rsPdf(20000)],
+        ['F', 'Infrastructure Cost',                 rsPdf(p.infra)],
+        ['G', 'Sub-Total  (C+D+E+F)',                rsPdf(p.sub)],
+        ['H', `Stamp Duty + Reg. Fees\n${sdDesc}`,   rsPdf(p.stamp)],
+        ['J', 'GST  (5% of C)',                      rsPdf(p.gst)],
+        ['',  'GRAND TOTAL  (G+H+J)',                rsPdf(p.mrp)],
       ],
       styles: {
-        fontSize: 8.5,
-        cellPadding: { top: 4, bottom: 4, left: 5, right: 5 },
-        font: 'helvetica',
-        textColor: [55, 65, 81],
-        lineColor: [226, 232, 240],
-        lineWidth: 0.25,
+        fontSize: 8, font: 'helvetica', textColor: [55,65,81],
+        lineColor: [226,232,240], lineWidth: 0.2,
+        cellPadding: {top:2.5,bottom:2.5,left:4,right:4},
       },
       headStyles: {
-        fillColor: PC,
-        textColor: [255, 255, 255],
-        fontSize: 7.5,
-        fontStyle: 'bold',
-        halign: 'left',
+        fillColor:PC, textColor:[255,255,255], fontSize:7, fontStyle:'bold',
+        cellPadding:{top:3,bottom:3,left:4,right:4},
       },
       columnStyles: {
-        0: { cellWidth: 10, halign: 'center', fontStyle: 'bold', textColor: PC },
-        1: { cellWidth: 'auto' },
-        2: { cellWidth: 42, halign: 'right', fontStyle: 'bold' },
+        0: {cellWidth:9,  halign:'center', fontStyle:'bold', textColor:PC},
+        1: {cellWidth:'auto'},
+        2: {cellWidth:42, halign:'right',  fontStyle:'bold'},
       },
-      alternateRowStyles: { fillColor: [249, 250, 252] },
-      theme: 'grid',
+      alternateRowStyles: {fillColor:[249,250,252]},
+      theme:'grid',
       didParseCell: (data) => {
-        if (data.section !== 'body') return;
-        if (data.row.index === 6) {  // Sub-Total (G)
-          data.cell.styles.fillColor = [235, 244, 255];
-          data.cell.styles.fontStyle = 'bold';
-          data.cell.styles.textColor = PC;
+        if (data.section!=='body') return;
+        if (data.row.index===6) {  // Sub-Total G
+          data.cell.styles.fillColor=[235,244,255];
+          data.cell.styles.fontStyle='bold';
+          data.cell.styles.textColor=PC;
         }
-        if (data.row.index === 9) {  // Grand Total
-          data.cell.styles.fillColor = PC;
-          data.cell.styles.textColor = [255, 255, 255];
-          data.cell.styles.fontStyle = 'bold';
-          data.cell.styles.fontSize  = 9.5;
+        if (data.row.index===9) {  // Grand Total
+          data.cell.styles.fillColor=PC;
+          data.cell.styles.textColor=[255,255,255];
+          data.cell.styles.fontStyle='bold';
+          data.cell.styles.fontSize=9.5;
         }
       },
     });
 
-    y = doc.lastAutoTable.finalY + 7;
+    y = doc.lastAutoTable.finalY + 5;
 
-    // ── Booking Token Note ───────────────────────
-    doc.setFillColor(255, 251, 235);
-    doc.setDrawColor(...AC);
-    doc.setLineWidth(0.4);
-    doc.roundedRect(ML, y, W - ML - MR, 16, 3, 3, 'FD');
-    doc.setFillColor(...AC);
-    doc.rect(ML, y, 2.5, 16, 'F');
+    // ── BOOKING NOTE ──
+    doc.setFillColor(255,251,235); doc.setDrawColor(...AC); doc.setLineWidth(0.3);
+    doc.roundedRect(ML,y,W-ML-MR,12,2.5,2.5,'FD');
+    doc.setFillColor(...AC); doc.rect(ML,y,2,12,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(130,70,0);
+    doc.text('Booking Amount:', ML+6, y+5);
+    doc.setFont('helvetica','normal');
+    doc.text('Rs.1,00,000/- (One Lakh Only) payable at the time of booking.', ML+39, y+5);
+    doc.setFontSize(7); doc.setTextColor(150,90,20);
+    doc.text('Milestone-based payment plan to be shared with the Allotment Letter.', ML+6, y+10);
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8.5);
-    doc.setTextColor(130, 70, 0);
-    doc.text('Booking Amount:', ML + 7, y + 7);
-    doc.setFont('helvetica', 'normal');
-    doc.text('₹1,00,000/- (Rupees One Lakh Only) payable at the time of booking.', ML + 42, y + 7);
-    doc.setFontSize(7.5);
-    doc.setTextColor(150, 90, 20);
-    doc.text('Detailed milestone-based payment plan shall be shared along with the Allotment Letter.', ML + 7, y + 13);
+    y += 17;
 
-    y += 23;
+    // ── SIGNATURE ──
+    doc.setDrawColor(180,180,180); doc.setLineWidth(0.25);
+    doc.line(W-MR-48, y, W-MR, y);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(110,110,110);
+    doc.text('Authorised Signatory', W-MR, y+4.5, {align:'right'});
+    doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(...PC);
+    doc.text('Golden Legacy', W-MR, y+10.5, {align:'right'});
 
-    // ── Signature ───────────────────────────────
-    const sigY = Math.max(y + 4, 248);
-    doc.setDrawColor(180, 180, 180);
-    doc.setLineWidth(0.3);
-    doc.line(W - MR - 52, sigY, W - MR, sigY);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(7.5);
-    doc.setTextColor(100, 100, 100);
-    doc.text('Authorised Signatory', W - MR, sigY + 5, { align: 'right' });
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8.5);
-    doc.setTextColor(...PC);
-    doc.text('Golden Legacy', W - MR, sigY + 12, { align: 'right' });
+    y += 17;
 
-    // ── Notes ────────────────────────────────────
-    const notesY = sigY + 20;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(6.8);
-    doc.setTextColor(130, 130, 130);
-    const noteLines = [
-      '* Stamp Duty & Registration: 6% of Base Amount + Reg. Fees (capped ₹30,000) as per Maharashtra Govt. rates. 1% Stamp Duty concession available for property registered exclusively in the name of female purchaser(s).',
-      '** GST @ 5% of Base Amount as per prevailing norms. Rate subject to change as per Govt. of India notifications.',
-      '*** Prices are effective WEF 28.04.2026 and subject to revision without prior notice. This quotation is for information purposes only and does not constitute an offer or contract.',
+    // ── NOTES ──
+    doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(135,135,135);
+    const notes = [
+      `* Stamp Duty: ${p.sdr}% of Base Amount + Reg. Fees (capped Rs.30,000) per Maharashtra Govt. rates.${p.isFemale?' 5% applied for female buyer(s).'  :' 1% concession available for property registered exclusively in name of female buyer(s).'}`,
+      '** GST @ 5% of Base Amount as per prevailing GST norms. Rate subject to change per Govt. of India notifications.',
+      '*** Prices effective WEF 05.05.2026 and subject to revision without notice. This quotation is for information only and does not constitute an offer or contract.',
     ];
-    let ny = notesY;
-    noteLines.forEach(line => {
-      const lines = doc.splitTextToSize(line, W - ML - MR);
-      doc.text(lines, ML, ny);
-      ny += lines.length * 4.2 + 1.5;
+    notes.forEach(n => {
+      const lines = doc.splitTextToSize(n, W-ML-MR);
+      doc.text(lines, ML, y);
+      y += lines.length*3.8+1.2;
     });
 
-    // ── Footer bar ────────────────────────────────
-    doc.setFillColor(...PC);
-    doc.rect(0, 284, W, 13, 'F');
-    doc.setFillColor(...AC);
-    doc.rect(0, 284, W, 1.5, 'F');
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(7.5);
-    doc.setTextColor(170, 210, 245);
-    doc.text('Thank you for your interest in Golden Legacy.', W / 2, 292, { align: 'center' });
+    // ── FOOTER ──
+    doc.setFillColor(...PC); doc.rect(0,283,W,14,'F');
+    doc.setFillColor(...AC); doc.rect(0,283,W,1.2,'F');
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(165,205,240);
+    doc.text('Thank you for your interest in Golden Legacy.', W/2, 291.5, {align:'center'});
 
-    // ── Save ────────────────────────────────────
-    bumpCounter();
-    document.getElementById('quotNumber').textContent = currentQuotNum();
-
-    const fname = `${qNum}_${custName.replace(/\s+/g, '_')}.pdf`;
-    doc.save(fname);
+    // ── SAVE ──
+    bump();
+    document.getElementById('quotNumber').textContent = quotNum();
+    doc.save(`${qn}_${name.replace(/\s+/g,'_')}.pdf`);
   }
 </script>
 
