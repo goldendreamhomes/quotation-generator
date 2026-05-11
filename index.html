@@ -311,7 +311,7 @@
         <span>💡</span>
         <div>
           <strong>Booking Amount: ₹1,00,000/-</strong> (Rupees One Lakh Only) to be paid at the time of booking.<br>
-          <span style="font-size:0.75rem;color:#92400e;display:block;margin-top:2px">Detailed milestone-based payment plan shall be provided along with the Allotment Letter.</span>
+          <span style="font-size:0.75rem;color:#92400e;display:block;margin-top:2px">Detailed milestone-based payment plan to be provided on request.</span>
         </div>
       </div>
     </div>
@@ -613,10 +613,6 @@
     doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(70,70,70);
     doc.text('Golden Legacy', b2+5, y+19);
     doc.text(`${curType}  ·  Floor ${curFloor}  ·  ${curArea.toLocaleString('en-IN')} sq.ft.`, b2+5, y+24.5);
-    if (p.isFemale) {
-      doc.setTextColor(...AC); doc.setFontSize(6.5);
-      doc.text('Female buyer(s) · 5% Stamp Duty applied', b2+5, y+26);
-    }
 
     // ── PRICING SECTION (new card layout) ──
     y += 32;
@@ -663,16 +659,14 @@
     doc.setFont('helvetica','normal');
     doc.text('Rs.1,00,000/- (One Lakh Only) payable at the time of booking.', ML+40, y+5);
     doc.setFontSize(7); doc.setTextColor(150,90,20);
-    doc.text('Milestone-based payment plan to be shared with the Allotment Letter.', ML+6, y+10);
+    doc.text('Detailed milestone-based payment plan to be provided on request.', ML+6, y+10);
 
     y += 17;
 
     // ── NOTES ──
     doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(135,135,135);
     const notes = [
-      `* Stamp Duty: ${p.sdr}% of Base Amount + Reg. Fees (capped Rs.30,000) per Maharashtra Govt. rates.${p.isFemale?' 5% applied for female buyer(s).'  :' 1% concession available for property registered exclusively in name of female buyer(s).'}`,
-      '** GST as per prevailing GST norms. Rate subject to change per Govt. of India notifications.',
-      '*** Prices effective WEF 05.05.2026 and subject to revision without notice. This quotation is for information only and does not constitute an offer or contract.',
+      'Prices are subject to revision without notice. This quotation is for information only and does not constitute an offer or contract.',
     ];
     notes.forEach(n => {
       const lines = doc.splitTextToSize(n, W-ML-MR);
