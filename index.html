@@ -301,30 +301,6 @@
         </div>
       </div>
 
-      <!-- Fixed charges (footnotes) -->
-      <div class="pc-fixed"><span>+ Maintenance &nbsp;<span class="fn-sup">①</span></span><span class="amt">₹90,000</span></div>
-      <div class="pc-fixed" style="background:#eef1f5"><span>+ Legal Fees &nbsp;<span class="fn-sup">②</span></span><span class="amt">₹20,000</span></div>
-      <div class="pc-fixed"><span>+ Infrastructure Cost &nbsp;<span class="fn-sup">③</span></span><span class="amt" id="pr-infra">—</span></div>
-
-      <!-- Sub-Total -->
-      <div class="pc-sub"><span>Sub-Total</span><span id="pr-sub">—</span></div>
-
-      <!-- Govt. Statutory Charges -->
-      <div class="pc-govt">
-        <div class="pc-govt-hdr">Govt. Statutory Charges</div>
-        <div class="pc-govt-row">
-          <span>Stamp Duty + Registration &nbsp;<span class="fn-sup">④</span></span>
-          <span class="amt" id="pr-stamp">—</span>
-        </div>
-        <div class="pc-govt-row">
-          <span>GST &nbsp;<span class="fn-sup">⑤</span>&nbsp; <span style="font-size:0.76rem;color:#a0aec0">5% of Base Amount</span></span>
-          <span class="amt" id="pr-gst">—</span>
-        </div>
-      </div>
-
-      <!-- Grand Total -->
-      <div class="pc-grand"><span>Grand Total &nbsp;<span style="font-size:0.78rem;font-weight:400;opacity:0.75">(incl. all charges)</span></span><span class="amt" id="pr-mrp">—</span></div>
-
       <!-- Footnotes -->
       <div class="pc-footnotes">
         <span class="fn-sup">①</span> Maintenance: ₹90,000 (3 years from possession)<br>
@@ -667,69 +643,7 @@
     doc.text(rsPdf(p.amount), W-MR-4, y+15, {align:'right'});
     y += 21;
 
-    // 2. FIXED CHARGES rows
-    const fixedRows = [
-      [`+ Maintenance  (1)`, rsPdf(90000)],
-      [`+ Legal Fees  (2)`,  rsPdf(20000)],
-      [`+ Infrastructure Cost  (3)`, rsPdf(p.infra)],
-    ];
-    fixedRows.forEach((row, i) => {
-      doc.setFillColor(i % 2 === 0 ? 244 : 247, i % 2 === 0 ? 246 : 248, i % 2 === 0 ? 248 : 251);
-      doc.rect(ML, y, CW, 7, 'F');
-      doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(100,112,130);
-      doc.text(row[0], ML+7, y+4.8);
-      doc.setFont('helvetica','bold'); doc.setTextColor(70,82,100);
-      doc.text(row[1], W-MR-4, y+4.8, {align:'right'});
-      y += 7;
-    });
-
-    // 3. SUB-TOTAL bar
-    doc.setFillColor(218,232,250);
-    doc.rect(ML, y, CW, 9, 'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...PC);
-    doc.text('Sub-Total', ML+7, y+6.2);
-    doc.text(rsPdf(p.sub), W-MR-4, y+6.2, {align:'right'});
-    y += 9;
-    y += 4;
-
-    // 4. GOVT. STATUTORY CHARGES section
-    doc.setFillColor(235,248,255); doc.setDrawColor(190,227,248); doc.setLineWidth(0.4);
-    doc.rect(ML, y, CW, 7, 'FD');
-    doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(43,108,176);
-    doc.text('GOVT. STATUTORY CHARGES', ML+5, y+4.6);
-    y += 7;
-
-    // Stamp duty row
-    const sdLabel = `Stamp Duty + Registration  (4)   ${p.sdr}% of Base Amt + Reg. Rs.30,000${p.isFemale ? '  [Female buyer(s)]' : ''}`;
-    doc.setFillColor(255,255,255); doc.setDrawColor(190,227,248); doc.setLineWidth(0.3);
-    doc.rect(ML, y, CW, 9, 'FD');
-    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(74,85,104);
-    doc.text(sdLabel, ML+5, y+6);
-    doc.setFont('helvetica','bold'); doc.setTextColor(45,55,72);
-    doc.text(rsPdf(p.stamp), W-MR-4, y+6, {align:'right'});
-    y += 9;
-
-    // GST row
-    doc.setFillColor(250,252,255); doc.setDrawColor(190,227,248); doc.setLineWidth(0.3);
-    doc.rect(ML, y, CW, 9, 'FD');
-    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(74,85,104);
-    doc.text('GST  (5)   5% of Base Amount  (as per prevailing GST norms)', ML+5, y+6);
-    doc.setFont('helvetica','bold'); doc.setTextColor(45,55,72);
-    doc.text(rsPdf(p.gst), W-MR-4, y+6, {align:'right'});
-    y += 9;
-    y += 4;
-
-    // 5. GRAND TOTAL bar
-    doc.setFillColor(...PC);
-    doc.roundedRect(ML, y, CW, 14, 3, 3, 'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(255,255,255);
-    doc.text('GRAND TOTAL  (MRP)', ML+7, y+9);
-    doc.setFontSize(13); doc.setTextColor(...AC);
-    doc.text(rsPdf(p.mrp), W-MR-4, y+9.5, {align:'right'});
-    y += 14;
-    y += 4;
-
-    // 6. FOOTNOTES block
+    // 2. FOOTNOTES block
     const fnLines = [
       `(1) Maintenance Charges: Rs.90,000  (3 years from possession)`,
       `(2) Legal Fees: Rs.20,000  (Agreement to Sale & Sale Deed registration)`,
