@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Golden Legacy – Quotation Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #edf2f7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 48px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(26,60,94,0.13);
+      width: 100%;
+      max-width: 560px;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .card-header {
+      background: #1a3c5e;
+      padding: 28px 28px 22px;
+      text-align: center;
+      position: relative;
+    }
+    .card-header h1 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: white;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .card-header .tagline {
+      font-size: 0.72rem;
+      color: rgba(200,220,245,0.85);
+      letter-spacing: 2px;
+      margin-top: 5px;
+      text-transform: uppercase;
+    }
+    .accent-bar { height: 5px; background: linear-gradient(90deg, #c8922a, #e8b84b, #c8922a); }
+
+    /* Body */
+    .card-body { padding: 24px 26px 20px; }
+
+    .section-label {
+      font-size: 0.67rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #a0aec0;
+      margin-bottom: 10px;
+      margin-top: 22px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    /* Fields */
+    .row { display: grid; gap: 12px; margin-bottom: 12px; }
+    .row.col2 { grid-template-columns: 1fr 1fr; }
+    .row.col3 { grid-template-columns: 1fr 1fr 1fr; }
+    .row.col1 { grid-template-columns: 1fr; }
+
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .field input,
+    .field select {
+      padding: 10px 12px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: #2d3748;
+      background: white;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 34px;
+    }
+    .field input:focus, .field select:focus {
+      outline: none;
+      border-color: #1a3c5e;
+      box-shadow: 0 0 0 3px rgba(26,60,94,0.1);
+    }
+    .field input[readonly] {
+      background: #f7fafc;
+      color: #4a5568;
+      cursor: default;
+    }
+    .field select:disabled {
+      background-color: #f7fafc;
+      color: #a0aec0;
+      cursor: not-allowed;
+    }
+
+    /* Quotation number display */
+    .quot-display {
+      background: #ebf4ff;
+      border: 1.5px solid #bee3f8;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #1a3c5e;
+      letter-spacing: 0.8px;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Unit chip */
+    .unit-chip {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: #f0fff4;
+      border: 1.5px solid #9ae6b4;
+      border-radius: 30px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #276749;
+      margin-bottom: 14px;
+    }
+    .unit-chip.show { display: inline-flex; }
+
+    /* Pricing table */
+    .pricing-wrap { display: none; }
+    .pricing-wrap.show { display: block; }
+
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(26,60,94,0.08);
+    }
+    .pricing-table thead tr th {
+      background: #1a3c5e;
+      color: white;
+      padding: 9px 12px;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .pricing-table thead tr th:last-child { text-align: right; }
+    .pricing-table tbody tr td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #edf2f7;
+      color: #4a5568;
+      vertical-align: middle;
+    }
+    .pricing-table tbody tr td:first-child {
+      font-weight: 800;
+      color: #1a3c5e;
+      width: 24px;
+    }
+    .pricing-table tbody tr td:last-child {
+      text-align: right;
+      font-weight: 700;
+      color: #2d3748;
+      font-variant-numeric: tabular-nums;
+    }
+    .pricing-table tbody tr:nth-child(even) td { background: #f7fafc; }
+    .pricing-table tbody tr.row-subtotal td {
+      background: #ebf4ff !important;
+      font-weight: 700;
+      color: #1a3c5e;
+    }
+    .pricing-table tbody tr.row-subtotal td:first-child { color: #1a3c5e; }
+    .pricing-table tbody tr.row-grand td {
+      background: #1a3c5e !important;
+      color: white;
+      font-weight: 800;
+      font-size: 0.9rem;
+      border-bottom: none;
+    }
+    .pricing-table .note-cell {
+      font-size: 0.7rem;
+      color: #a0aec0;
+      font-weight: 400;
+      display: block;
+      margin-top: 1px;
+    }
+
+    /* Booking footnote */
+    .booking-note {
+      display: none;
+      background: #fffbeb;
+      border: 1.5px solid #f6e05e;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 14px;
+      font-size: 0.82rem;
+      color: #744210;
+    }
+    .booking-note.show { display: flex; gap: 8px; align-items: flex-start; }
+    .booking-note strong { color: #92400e; }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .btn-download {
+      flex: 1;
+      background: #1a3c5e;
+      color: white;
+      border: none;
+      border-radius: 9px;
+      padding: 13px 16px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .btn-download:hover:not(:disabled) {
+      background: #122c47;
+      box-shadow: 0 4px 14px rgba(26,60,94,0.3);
+    }
+    .btn-download:disabled {
+      background: #cbd5e0;
+      cursor: not-allowed;
+    }
+    .btn-clear {
+      background: white;
+      color: #718096;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 9px;
+      padding: 13px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-clear:hover {
+      border-color: #fc8181;
+      color: #e53e3e;
+      background: #fff5f5;
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+      font-size: 0.68rem;
+      color: #a0aec0;
+      text-align: center;
+      margin-top: 20px;
+      line-height: 1.6;
+      padding: 0 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Header -->
+  <div class="card-header">
+    <h1>Golden Legacy</h1>
+    <div class="tagline">Quotation Generator &nbsp;·&nbsp; Wing B</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <div class="card-body">
+
+    <!-- Quotation Info -->
+    <div class="section-label">Quotation Details</div>
+    <div class="row col2">
+      <div class="field">
+        <label>Quotation Number</label>
+        <div class="quot-display" id="quotNumber">—</div>
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="text" id="quotDate" readonly>
+      </div>
+    </div>
+
+    <!-- Customer -->
+    <div class="section-label">Customer Details</div>
+    <div class="row col1">
+      <div class="field">
+        <label>Customer Name *</label>
+        <input type="text" id="custName" placeholder="Full Name">
+      </div>
+    </div>
+    <div class="row col2">
+      <div class="field">
+        <label>Phone</label>
+        <input type="tel" id="custPhone" placeholder="+91 XXXXX XXXXX">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="custEmail" placeholder="email@example.com">
+      </div>
+    </div>
+
+    <!-- Unit Selection -->
+    <div class="section-label">Unit Selection</div>
+    <div class="row col3">
+      <div class="field">
+        <label>Project</label>
+        <input type="text" value="Golden Legacy" readonly>
+      </div>
+      <div class="field">
+        <label>Wing</label>
+        <input type="text" value="B" readonly>
+      </div>
+      <div class="field">
+        <label>Floor *</label>
+        <select id="floorSelect" onchange="onFloorChange()">
+          <option value="">Select</option>
+        </select>
+      </div>
+    </div>
+    <div class="row col1">
+      <div class="field">
+        <label>Flat Number *</label>
+        <select id="flatSelect" onchange="onFlatChange()" disabled>
+          <option value="">Select Floor First</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Unit chip (shown after flat selected) -->
+    <div class="unit-chip" id="unitChip">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      <span id="unitChipText"></span>
+    </div>
+
+    <!-- Pricing -->
+    <div class="pricing-wrap" id="pricingWrap">
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Description</th>
+            <th style="text-align:right">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A</td>
+            <td>Total Usable Area<span class="note-cell" id="areaNote"></span></td>
+            <td id="pr-area">—</td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td>Rate per sq.ft.</td>
+            <td id="pr-rate">—</td>
+          </tr>
+          <tr>
+            <td>C</td>
+            <td>Base Amount <span class="note-cell">A × B</span></td>
+            <td id="pr-amount">—</td>
+          </tr>
+          <tr>
+            <td>D</td>
+            <td>Maintenance Charges <span class="note-cell">3 years from date of possession</span></td>
+            <td id="pr-maint">₹90,000</td>
+          </tr>
+          <tr>
+            <td>E</td>
+            <td>Legal Fees <span class="note-cell">Reg. Agreement to Sale &amp; Sale Deed</span></td>
+            <td id="pr-legal">₹20,000</td>
+          </tr>
+          <tr>
+            <td>F</td>
+            <td>Infrastructure Cost <span class="note-cell">Roads, drainage, utilities &amp; landscaping</span></td>
+            <td id="pr-infra">—</td>
+          </tr>
+          <tr class="row-subtotal">
+            <td>G</td>
+            <td><strong>Sub-Total</strong> <span class="note-cell" style="color:#5a89b8">C + D + E + F</span></td>
+            <td id="pr-total">—</td>
+          </tr>
+          <tr>
+            <td>H</td>
+            <td>Stamp Duty + Registration Fees <span class="note-cell">6% of C + Reg. Fees (capped ₹30,000) · 1% concession for female buyer(s)</span></td>
+            <td id="pr-stamp">—</td>
+          </tr>
+          <tr>
+            <td>J</td>
+            <td>GST <span class="note-cell">5% of C as per prevailing GST norms</span></td>
+            <td id="pr-gst">—</td>
+          </tr>
+          <tr class="row-grand">
+            <td></td>
+            <td>Grand Total (MRP) &nbsp;<span style="font-size:0.72rem;font-weight:500;opacity:0.8">G + H + J</span></td>
+            <td id="pr-mrp">—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Booking footnote -->
+      <div class="booking-note show" id="bookingNote">
+        <span>💡</span>
+        <div>
+          <strong>Booking Amount: ₹1,00,000/-</strong> (Rupees One Lakh Only) to be paid at the time of booking.<br>
+          <span style="font-size:0.75rem;color:#92400e;margin-top:2px;display:block">Detailed milestone-based payment plan shall be provided along with the Allotment Letter.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn-download" id="downloadBtn" onclick="generatePDF()" disabled>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Quotation PDF
+      </button>
+      <button class="btn-clear" onclick="clearForm()">Clear</button>
+    </div>
+
+  </div><!-- /card-body -->
+</div>
+
+<div class="disclaimer">
+  Prices effective WEF 28.04.2026 · Subject to revision without prior notice<br>
+  This quotation is for information purposes only and does not constitute an offer or contract.
+</div>
+
+<script>
+  const { jsPDF } = window.jspdf;
+
+  // ─────────────────────────────────────────────
+  // PRICE DATA
+  // Flat unit positions: 1–8 per floor
+  // BHK type: 01,04,05,08 = 3BHK; 02,03,06,07 = 2BHK
+  // Rates by floor tier and position group
+  // ─────────────────────────────────────────────
+  function getFlatData(floor, unit) {
+    const f = parseInt(floor);
+    const u = parseInt(unit);
+
+    const is3BHK = (u === 1 || u === 4 || u === 5 || u === 8);
+    const type   = is3BHK ? '3BHK' : '2BHK';
+    const area   = is3BHK ? 1540 : 1180;
+    const posLow = (u <= 4); // positions 1–4 vs 5–8
+
+    let rate;
+    if      (f <= 4)  { rate = posLow ? 4590 : 4640; }
+    else if (f <= 8)  { rate = posLow ? 4640 : 4690; }
+    else              { rate = posLow ? 4690 : 4740; }
+
+    const infra    = is3BHK ? 250000 : 200000;
+    const maint    = 90000;
+    const legal    = 20000;
+    const amount   = area * rate;
+    const subtotal = amount + maint + legal + infra;
+    const stamp    = Math.round(amount * 0.06) + 30000;
+    const gst      = Math.round(amount * 0.05);
+    const mrp      = subtotal + stamp + gst;
+
+    return { type, area, rate, amount, maint, legal, infra, subtotal, stamp, gst, mrp };
+  }
+
+  // ─────────────────────────────────────────────
+  // QUOTATION NUMBER  (counter stored in localStorage)
+  // ─────────────────────────────────────────────
+  function currentQuotNum() {
+    const counter = parseInt(localStorage.getItem('gl_quot_counter') || '1');
+    const d = new Date();
+    const yy = String(d.getFullYear()).slice(2);
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `QUOT-GL-${counter}-${yy}${mm}${dd}`;
+  }
+
+  function bumpCounter() {
+    const c = parseInt(localStorage.getItem('gl_quot_counter') || '1');
+    localStorage.setItem('gl_quot_counter', String(c + 1));
+  }
+
+  // ─────────────────────────────────────────────
+  // HELPERS
+  // ─────────────────────────────────────────────
+  const inr = n => '₹' + Number(n).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+
+  function flatNumber(floor, unit) {
+    return `${floor}${String(parseInt(unit)).padStart(2, '0')}`;
+  }
+
+  // ─────────────────────────────────────────────
+  // INIT
+  // ─────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    // Date display
+    const today = new Date();
+    document.getElementById('quotDate').value =
+      today.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    // Quotation number
+    document.getElementById('quotNumber').textContent = currentQuotNum();
+
+    // Floor dropdown
+    const sel = document.getElementById('floorSelect');
+    for (let i = 1; i <= 16; i++) {
+      const o = document.createElement('option');
+      o.value = i; o.textContent = `Floor ${i}`;
+      sel.appendChild(o);
+    }
+  });
+
+  // ─────────────────────────────────────────────
+  // FLOOR CHANGE → populate flat dropdown
+  // ─────────────────────────────────────────────
+  function onFloorChange() {
+    const floor = document.getElementById('floorSelect').value;
+    const flatSel = document.getElementById('flatSelect');
+
+    flatSel.innerHTML = '<option value="">Select Flat</option>';
+    flatSel.disabled = !floor;
+    hidePricing();
+
+    if (!floor) return;
+
+    for (let u = 1; u <= 8; u++) {
+      const fn   = flatNumber(floor, u);
+      const data = getFlatData(floor, u);
+      const o    = document.createElement('option');
+      o.value = u;
+      o.textContent = `${fn}  —  ${data.type}`;
+      flatSel.appendChild(o);
+    }
+  }
+
+  // ─────────────────────────────────────────────
+  // FLAT CHANGE → fill pricing
+  // ─────────────────────────────────────────────
+  function onFlatChange() {
+    const floor = document.getElementById('floorSelect').value;
+    const unit  = document.getElementById('flatSelect').value;
+
+    if (!floor || !unit) { hidePricing(); return; }
+
+    const d  = getFlatData(floor, unit);
+    const fn = flatNumber(floor, unit);
+
+    // Unit chip
+    const chip = document.getElementById('unitChip');
+    document.getElementById('unitChipText').textContent =
+      `Wing B · Floor ${floor} · Flat ${fn} · ${d.type} · ${d.area.toLocaleString('en-IN')} sq.ft.`;
+    chip.classList.add('show');
+
+    // Fill table
+    set('pr-area',   `${d.area.toLocaleString('en-IN')} sq.ft.`);
+    set('pr-rate',   `₹${d.rate.toLocaleString('en-IN')} /sq.ft.`);
+    set('pr-amount', inr(d.amount));
+    set('pr-maint',  inr(d.maint));
+    set('pr-legal',  inr(d.legal));
+    set('pr-infra',  inr(d.infra));
+    set('pr-total',  inr(d.subtotal));
+    set('pr-stamp',  inr(d.stamp));
+    set('pr-gst',    inr(d.gst));
+    set('pr-mrp',    inr(d.mrp));
+
+    document.getElementById('pricingWrap').classList.add('show');
+    document.getElementById('downloadBtn').disabled = false;
+  }
+
+  function hidePricing() {
+    document.getElementById('pricingWrap').classList.remove('show');
+    document.getElementById('unitChip').classList.remove('show');
+    document.getElementById('downloadBtn').disabled = true;
+  }
+
+  // ─────────────────────────────────────────────
+  // CLEAR
+  // ─────────────────────────────────────────────
+  function clearForm() {
+    ['custName', 'custPhone', 'custEmail'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('floorSelect').value = '';
+    document.getElementById('flatSelect').innerHTML = '<option value="">Select Floor First</option>';
+    document.getElementById('flatSelect').disabled = true;
+    hidePricing();
+  }
+
+  // ─────────────────────────────────────────────
+  // GENERATE PDF
+  // ─────────────────────────────────────────────
+  function generatePDF() {
+    const floor = document.getElementById('floorSelect').value;
+    const unit  = document.getElementById('flatSelect').value;
+    if (!floor || !unit) return;
+
+    const d    = getFlatData(floor, unit);
+    const fn   = flatNumber(floor, unit);
+    const qNum = currentQuotNum();
+
+    const custName  = document.getElementById('custName').value.trim()  || 'Prospective Buyer';
+    const custPhone = document.getElementById('custPhone').value.trim();
+    const custEmail = document.getElementById('custEmail').value.trim();
+
+    const today   = new Date();
+    const dateStr = today.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const W = 210, ML = 18, MR = 18;
+    const PC = [26, 60, 94];
+    const AC = [200, 146, 42];
+    const LB = [245, 247, 250];
+
+    // ── Header ──────────────────────────────────
+    doc.setFillColor(...PC);
+    doc.rect(0, 0, W, 48, 'F');
+    doc.setFillColor(...AC);
+    doc.rect(0, 48, W, 4.5, 'F');
+
+    // Company name
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.setTextColor(255, 255, 255);
+    doc.text('GOLDEN LEGACY', W / 2, 20, { align: 'center' });
+
+    // Subtitle
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(180, 215, 245);
+    doc.text('QUOTATION', W / 2, 28, { align: 'center', charSpace: 3 });
+
+    // Thin gold divider
+    doc.setDrawColor(...AC);
+    doc.setLineWidth(0.25);
+    doc.line(ML, 33, W - MR, 33);
+
+    // Quot no + date
+    doc.setFontSize(8);
+    doc.setTextColor(160, 205, 240);
+    doc.text(`No: ${qNum}`, ML, 40);
+    doc.text(`Date: ${dateStr}`, W - MR, 40, { align: 'right' });
+
+    // ── Info Boxes ──────────────────────────────
+    let y = 60;
+    const bW = (W - ML - MR - 6) / 2;
+
+    // Customer box
+    doc.setFillColor(...LB);
+    doc.roundedRect(ML, y, bW, 34, 3, 3, 'F');
+    doc.setFillColor(...AC);
+    doc.rect(ML, y, 2.5, 34, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(6.5);
+    doc.setTextColor(...PC);
+    doc.text('PREPARED FOR', ML + 6, y + 7);
+
+    doc.setFontSize(10);
+    doc.text(custName, ML + 6, y + 15);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(70, 70, 70);
+    let cy = y + 22;
+    if (custPhone) { doc.text(custPhone, ML + 6, cy); cy += 6; }
+    if (custEmail) { doc.text(custEmail, ML + 6, cy); }
+
+    // Unit box
+    const b2 = ML + bW + 6;
+    doc.setFillColor(...LB);
+    doc.roundedRect(b2, y, bW, 34, 3, 3, 'F');
+    doc.setFillColor(...PC);
+    doc.rect(b2, y, 2.5, 34, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(6.5);
+    doc.setTextColor(...PC);
+    doc.text('UNIT DETAILS', b2 + 6, y + 7);
+
+    doc.setFontSize(10);
+    doc.text(`Wing B  –  Flat ${fn}`, b2 + 6, y + 15);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(70, 70, 70);
+    doc.text('Golden Legacy', b2 + 6, y + 22);
+    doc.text(`${d.type}  ·  Floor ${floor}  ·  ${d.area.toLocaleString('en-IN')} sq.ft.`, b2 + 6, y + 29);
+
+    // ── Price Table ──────────────────────────────
+    y += 42;
+
+    doc.autoTable({
+      startY: y,
+      margin: { left: ML, right: MR },
+      head: [['', 'Description', 'Amount']],
+      body: [
+        ['A', 'Total Usable Area',              `${d.area.toLocaleString('en-IN')} sq.ft.`],
+        ['B', 'Rate (per sq.ft.)',               `₹${d.rate.toLocaleString('en-IN')}`],
+        ['C', 'Base Amount  (A × B)',       `₹${d.amount.toLocaleString('en-IN')}`],
+        ['D', 'Maintenance Charges\n(3 years from date of possession)', `₹${d.maint.toLocaleString('en-IN')}`],
+        ['E', 'Legal Fees\n(Reg. Agreement to Sale & Sale Deed)',        `₹${d.legal.toLocaleString('en-IN')}`],
+        ['F', 'Infrastructure Cost\n(Roads, drainage, utilities & landscaping)', `₹${d.infra.toLocaleString('en-IN')}`],
+        ['G', 'Sub-Total  (C+D+E+F)',            `₹${d.subtotal.toLocaleString('en-IN')}`],
+        ['H', 'Stamp Duty + Registration Fees\n(6% of C + Reg. Fees capped ₹30,000)', `₹${d.stamp.toLocaleString('en-IN')}`],
+        ['J', 'GST  (5% of C)',                 `₹${d.gst.toLocaleString('en-IN')}`],
+        ['',  'GRAND TOTAL  (G+H+J)',            `₹${d.mrp.toLocaleString('en-IN')}`],
+      ],
+      styles: {
+        fontSize: 8.5,
+        cellPadding: { top: 4, bottom: 4, left: 5, right: 5 },
+        font: 'helvetica',
+        textColor: [55, 65, 81],
+        lineColor: [226, 232, 240],
+        lineWidth: 0.25,
+      },
+      headStyles: {
+        fillColor: PC,
+        textColor: [255, 255, 255],
+        fontSize: 7.5,
+        fontStyle: 'bold',
+        halign: 'left',
+      },
+      columnStyles: {
+        0: { cellWidth: 10, halign: 'center', fontStyle: 'bold', textColor: PC },
+        1: { cellWidth: 'auto' },
+        2: { cellWidth: 42, halign: 'right', fontStyle: 'bold' },
+      },
+      alternateRowStyles: { fillColor: [249, 250, 252] },
+      theme: 'grid',
+      didParseCell: (data) => {
+        if (data.section !== 'body') return;
+        if (data.row.index === 6) {  // Sub-Total (G)
+          data.cell.styles.fillColor = [235, 244, 255];
+          data.cell.styles.fontStyle = 'bold';
+          data.cell.styles.textColor = PC;
+        }
+        if (data.row.index === 9) {  // Grand Total
+          data.cell.styles.fillColor = PC;
+          data.cell.styles.textColor = [255, 255, 255];
+          data.cell.styles.fontStyle = 'bold';
+          data.cell.styles.fontSize  = 9.5;
+        }
+      },
+    });
+
+    y = doc.lastAutoTable.finalY + 7;
+
+    // ── Booking Token Note ───────────────────────
+    doc.setFillColor(255, 251, 235);
+    doc.setDrawColor(...AC);
+    doc.setLineWidth(0.4);
+    doc.roundedRect(ML, y, W - ML - MR, 16, 3, 3, 'FD');
+    doc.setFillColor(...AC);
+    doc.rect(ML, y, 2.5, 16, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(130, 70, 0);
+    doc.text('Booking Amount:', ML + 7, y + 7);
+    doc.setFont('helvetica', 'normal');
+    doc.text('₹1,00,000/- (Rupees One Lakh Only) payable at the time of booking.', ML + 42, y + 7);
+    doc.setFontSize(7.5);
+    doc.setTextColor(150, 90, 20);
+    doc.text('Detailed milestone-based payment plan shall be shared along with the Allotment Letter.', ML + 7, y + 13);
+
+    y += 23;
+
+    // ── Signature ───────────────────────────────
+    const sigY = Math.max(y + 4, 248);
+    doc.setDrawColor(180, 180, 180);
+    doc.setLineWidth(0.3);
+    doc.line(W - MR - 52, sigY, W - MR, sigY);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Authorised Signatory', W - MR, sigY + 5, { align: 'right' });
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...PC);
+    doc.text('Golden Legacy', W - MR, sigY + 12, { align: 'right' });
+
+    // ── Notes ────────────────────────────────────
+    const notesY = sigY + 20;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(6.8);
+    doc.setTextColor(130, 130, 130);
+    const noteLines = [
+      '* Stamp Duty & Registration: 6% of Base Amount + Reg. Fees (capped ₹30,000) as per Maharashtra Govt. rates. 1% Stamp Duty concession available for property registered exclusively in the name of female purchaser(s).',
+      '** GST @ 5% of Base Amount as per prevailing norms. Rate subject to change as per Govt. of India notifications.',
+      '*** Prices are effective WEF 28.04.2026 and subject to revision without prior notice. This quotation is for information purposes only and does not constitute an offer or contract.',
+    ];
+    let ny = notesY;
+    noteLines.forEach(line => {
+      const lines = doc.splitTextToSize(line, W - ML - MR);
+      doc.text(lines, ML, ny);
+      ny += lines.length * 4.2 + 1.5;
+    });
+
+    // ── Footer bar ────────────────────────────────
+    doc.setFillColor(...PC);
+    doc.rect(0, 284, W, 13, 'F');
+    doc.setFillColor(...AC);
+    doc.rect(0, 284, W, 1.5, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(170, 210, 245);
+    doc.text('Thank you for your interest in Golden Legacy.', W / 2, 292, { align: 'center' });
+
+    // ── Save ────────────────────────────────────
+    bumpCounter();
+    document.getElementById('quotNumber').textContent = currentQuotNum();
+
+    const fname = `${qNum}_${custName.replace(/\s+/g, '_')}.pdf`;
+    doc.save(fname);
+  }
+</script>
+
+</body>
+</html>
