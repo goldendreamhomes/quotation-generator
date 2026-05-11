@@ -417,7 +417,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('quotDate').value =
       new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
-    document.getElementById('quotNumber').textContent = quotNum();
     const sel = document.getElementById('floorSel');
     for (let i=1;i<=16;i++) {
       const o=document.createElement('option'); o.value=i; o.textContent=`Floor ${i}`; sel.appendChild(o);
