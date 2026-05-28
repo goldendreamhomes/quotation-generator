@@ -187,6 +187,23 @@
     .btn-cl:hover { border-color: #fc8181; color: #e53e3e; background: #fff5f5; }
 
     .disclaimer { font-size: 0.68rem; color: #a0aec0; text-align: center; margin-top: 18px; line-height: 1.6; }
+
+    /* Payment Schedule */
+    .sched-card { background: white; border-radius: 16px; box-shadow: 0 8px 32px rgba(26,60,94,0.13); width: 100%; max-width: 560px; overflow: hidden; margin-top: 16px; }
+    .sched-hdr { background: #1a3c5e; padding: 16px 22px 12px; }
+    .sched-hdr h2 { font-size: 0.95rem; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 2px; }
+    .sched-hdr p { font-size: 0.68rem; color: rgba(175,210,245,0.8); margin-top: 3px; }
+    .pay-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    .pay-table thead tr { background: #edf2f7; }
+    .pay-table th { padding: 9px 10px; text-align: left; font-size: 0.65rem; font-weight: 800; color: #4a5568; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; }
+    .pay-table th:last-child, .pay-table th:nth-child(3) { text-align: right; }
+    .pay-table td { padding: 8px 10px; color: #4a5568; border-bottom: 1px solid #f0f4f8; }
+    .pay-table td:last-child, .pay-table td:nth-child(3) { text-align: right; font-weight: 700; color: #2d3748; }
+    .pay-table td:first-child { color: #a0aec0; font-weight: 600; width: 32px; }
+    .pay-table tbody tr:nth-child(even) { background: #f9fbfd; }
+    .pay-table tbody tr:last-child td { background: #1a3c5e; color: white; font-weight: 700; border-bottom: none; }
+    .pay-table tbody tr:last-child td:last-child { color: #fbd38d; }
+    .pay-table tbody tr:first-child td { background: #fffbf0; }
   </style>
 </head>
 <body>
@@ -302,9 +319,8 @@
         <span class="fn-sup">①</span> Maintenance: ₹90,000 (3 years from possession)<br>
         <span class="fn-sup">②</span> Legal Fees: ₹20,000 (Agreement to Sale &amp; Sale Deed registration)<br>
         <span class="fn-sup">③</span> Infrastructure Cost: <span id="fn-infra">—</span> (Roads, drainage, utilities &amp; landscaping)<br>
-        <span class="fn-sup">④</span> Covered under-building parking: ₹2,00,000/- additional per slot<br>
-        <span class="fn-sup">⑤</span> Stamp Duty: <span id="fn-sdr">6%</span> of Base Amount + Reg. Fees (capped ₹30,000) &nbsp;·&nbsp; as per Maharashtra Govt. rates<br>
-        <span class="fn-sup">⑥</span> GST as per prevailing GST norms &nbsp;·&nbsp; subject to Govt. of India notifications
+        <span class="fn-sup">④</span> Stamp Duty: <span id="fn-sdr">6%</span> of Base Amount + Reg. Fees (capped ₹30,000) &nbsp;·&nbsp; as per Maharashtra Govt. rates<br>
+        <span class="fn-sup">⑤</span> GST as per prevailing GST norms &nbsp;·&nbsp; subject to Govt. of India notifications
       </div>
 
       <!-- Booking note -->
@@ -327,6 +343,41 @@
     </div>
 
   </div>
+</div>
+
+<div class="sched-card">
+  <div class="sched-hdr">
+    <h2>Payment Schedule</h2>
+    <p>Stage-wise construction linked payment plan · % of Total Consideration</p>
+  </div>
+  <div class="accent-bar"></div>
+  <table class="pay-table">
+    <thead>
+      <tr><th>Sr.</th><th>Stage of Construction</th><th>%</th><th>Cumulative</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>On Booking / at the time of Agreement for Sale</td><td>10%</td><td>10%</td></tr>
+      <tr><td>2</td><td>On completion of Plinth</td><td>25%</td><td>35%</td></tr>
+      <tr><td>3</td><td>On completion of Ground Floor Slab</td><td>5%</td><td>40%</td></tr>
+      <tr><td>4</td><td>On completion of RCC Slab of 1st Floor</td><td>4%</td><td>44%</td></tr>
+      <tr><td>5</td><td>On completion of RCC Slab of 2nd Floor</td><td>3%</td><td>47%</td></tr>
+      <tr><td>6</td><td>On completion of RCC Slab of 3rd Floor</td><td>4%</td><td>51%</td></tr>
+      <tr><td>7</td><td>On completion of RCC Slab of 4th Floor</td><td>3%</td><td>54%</td></tr>
+      <tr><td>8</td><td>On completion of RCC Slab of 5th Floor</td><td>4%</td><td>58%</td></tr>
+      <tr><td>9</td><td>On completion of RCC Slab of 6th Floor</td><td>3%</td><td>61%</td></tr>
+      <tr><td>10</td><td>On completion of RCC Slab of 7th Floor</td><td>4%</td><td>65%</td></tr>
+      <tr><td>11</td><td>On completion of RCC Slab of 8th Floor</td><td>3%</td><td>68%</td></tr>
+      <tr><td>12</td><td>On completion of RCC Slab of 9th Floor</td><td>4%</td><td>72%</td></tr>
+      <tr><td>13</td><td>On completion of RCC Slab of 10th Floor</td><td>3%</td><td>75%</td></tr>
+      <tr><td>14</td><td>On completion of RCC Slab of 11th Floor</td><td>4%</td><td>79%</td></tr>
+      <tr><td>15</td><td>On completion of RCC Slab of 12th Floor</td><td>3%</td><td>82%</td></tr>
+      <tr><td>16</td><td>On completion of RCC Slab of 13th Floor</td><td>4%</td><td>86%</td></tr>
+      <tr><td>17</td><td>On completion of RCC Slab of 14th Floor</td><td>3%</td><td>89%</td></tr>
+      <tr><td>18</td><td>On completion of RCC Slab of 15th Floor</td><td>4%</td><td>93%</td></tr>
+      <tr><td>19</td><td>On completion of RCC Slab of 16th Floor</td><td>3%</td><td>96%</td></tr>
+      <tr><td>20</td><td>On Possession / Handover</td><td>4%</td><td>100%</td></tr>
+    </tbody>
+  </table>
 </div>
 
 <div class="disclaimer">
@@ -638,9 +689,8 @@
       `(1) Maintenance Charges: Rs.90,000  (3 years from possession)`,
       `(2) Legal Fees: Rs.20,000  (Agreement to Sale & Sale Deed registration)`,
       `(3) Infrastructure Cost: ${rsPdf(p.infra)}  (Roads, drainage, utilities & landscaping)`,
-      `(4) Covered under-building parking: Rs.2,00,000/- additional per slot`,
-      `(5) Stamp Duty: ${p.sdr}% of Base Amount + Reg. Fees (capped Rs.30,000)  -  Maharashtra Govt. rates${p.isFemale ? '  |  5% applied for female buyer(s)' : ''}`,
-      `(6) GST as per prevailing GST norms  -  subject to Govt. of India notifications`,
+      `(4) Stamp Duty: ${p.sdr}% of Base Amount + Reg. Fees (capped Rs.30,000)  -  Maharashtra Govt. rates${p.isFemale ? '  |  5% applied for female buyer(s)' : ''}`,
+      `(5) GST as per prevailing GST norms  -  subject to Govt. of India notifications`,
     ];
     const fnH = 7 + fnLines.length * 4.2;
     doc.setFillColor(255,251,245); doc.setDrawColor(...AC); doc.setLineWidth(0.3);
@@ -664,6 +714,71 @@
     doc.text('Detailed milestone-based payment plan to be provided on request.', ML+6, y+10);
 
     y += 17;
+
+    // ── PAYMENT SCHEDULE ──
+    doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(...PC);
+    doc.text('PAYMENT SCHEDULE', ML, y);
+    doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(100,120,150);
+    doc.text('Stage-wise construction linked payment plan  ·  % of Total Consideration', ML+38, y);
+    y += 4;
+
+    doc.autoTable({
+      startY: y,
+      margin: { left: ML, right: MR },
+      head: [['Sr.', 'Stage of Construction', '% of Total', 'Cumulative']],
+      body: [
+        [1,  'On Booking / at the time of Agreement for Sale', '10%', '10%'],
+        [2,  'On completion of Plinth',                        '25%', '35%'],
+        [3,  'On completion of Ground Floor Slab',             '5%',  '40%'],
+        [4,  'On completion of RCC Slab of 1st Floor',         '4%',  '44%'],
+        [5,  'On completion of RCC Slab of 2nd Floor',         '3%',  '47%'],
+        [6,  'On completion of RCC Slab of 3rd Floor',         '4%',  '51%'],
+        [7,  'On completion of RCC Slab of 4th Floor',         '3%',  '54%'],
+        [8,  'On completion of RCC Slab of 5th Floor',         '4%',  '58%'],
+        [9,  'On completion of RCC Slab of 6th Floor',         '3%',  '61%'],
+        [10, 'On completion of RCC Slab of 7th Floor',         '4%',  '65%'],
+        [11, 'On completion of RCC Slab of 8th Floor',         '3%',  '68%'],
+        [12, 'On completion of RCC Slab of 9th Floor',         '4%',  '72%'],
+        [13, 'On completion of RCC Slab of 10th Floor',        '3%',  '75%'],
+        [14, 'On completion of RCC Slab of 11th Floor',        '4%',  '79%'],
+        [15, 'On completion of RCC Slab of 12th Floor',        '3%',  '82%'],
+        [16, 'On completion of RCC Slab of 13th Floor',        '4%',  '86%'],
+        [17, 'On completion of RCC Slab of 14th Floor',        '3%',  '89%'],
+        [18, 'On completion of RCC Slab of 15th Floor',        '4%',  '93%'],
+        [19, 'On completion of RCC Slab of 16th Floor',        '3%',  '96%'],
+        [20, 'On Possession / Handover',                       '4%',  '100%'],
+      ],
+      styles: {
+        fontSize: 7, font: 'helvetica', textColor: [55,65,81],
+        lineColor: [226,232,240], lineWidth: 0.15,
+        cellPadding: { top: 2, bottom: 2, left: 3, right: 3 },
+      },
+      headStyles: {
+        fillColor: PC, textColor: [255,255,255], fontSize: 6.5, fontStyle: 'bold',
+        cellPadding: { top: 2.5, bottom: 2.5, left: 3, right: 3 },
+      },
+      columnStyles: {
+        0: { cellWidth: 9,  halign: 'center', textColor: [160,174,192] },
+        1: { cellWidth: 'auto' },
+        2: { cellWidth: 22, halign: 'right', fontStyle: 'bold' },
+        3: { cellWidth: 22, halign: 'right', fontStyle: 'bold' },
+      },
+      alternateRowStyles: { fillColor: [249,251,253] },
+      theme: 'grid',
+      didParseCell: (data) => {
+        if (data.section === 'body' && data.row.index === 19) {
+          data.cell.styles.fillColor = PC;
+          data.cell.styles.textColor = [255,255,255];
+          data.cell.styles.fontStyle = 'bold';
+          if (data.column.index === 3) data.cell.styles.textColor = AC;
+        }
+        if (data.section === 'body' && data.row.index === 0) {
+          data.cell.styles.fillColor = [255,251,230];
+        }
+      },
+    });
+
+    y = doc.lastAutoTable.finalY + 5;
 
     // ── NOTES ──
     doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(135,135,135);
