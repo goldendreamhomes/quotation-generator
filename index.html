@@ -319,7 +319,7 @@
         <span class="fn-sup">①</span> Maintenance: ₹90,000 (3 years from possession)<br>
         <span class="fn-sup">②</span> Legal Fees: ₹20,000 (Agreement to Sale &amp; Sale Deed registration)<br>
         <span class="fn-sup">③</span> Infrastructure Cost: <span id="fn-infra">—</span> (Roads, drainage, utilities &amp; landscaping)<br>
-        <span class="fn-sup">④</span> Stamp Duty: <span id="fn-sdr">6%</span> of Base Amount + Reg. Fees (capped ₹30,000) &nbsp;·&nbsp; as per Maharashtra Govt. rates<br>
+        <span class="fn-sup">④</span> Stamp Duty: <span id="fn-sdr">6%</span> of Base Amount + 1% Reg. Fees (capped ₹30,000) &nbsp;·&nbsp; as per Maharashtra Govt. rates<br>
         <span class="fn-sup">⑤</span> GST as per prevailing GST norms &nbsp;·&nbsp; subject to Govt. of India notifications
       </div>
 
@@ -355,7 +355,8 @@
       <tr><th>Sr.</th><th>Stage of Construction</th><th>%</th><th>Cumulative</th></tr>
     </thead>
     <tbody>
-      <tr><td>1</td><td>On Booking / at the time of Agreement for Sale</td><td>10%</td><td>10%</td></tr>
+      <tr><td></td><td>Application Money</td><td colspan="2" style="text-align:center;font-weight:700;color:#2d3748;">₹1,00,000</td></tr>
+      <tr><td>1</td><td>Before Execution of Agreement for Sale</td><td>10% (minus application money)</td><td>10%</td></tr>
       <tr><td>2</td><td>On completion of Plinth</td><td>25%</td><td>35%</td></tr>
       <tr><td>3</td><td>On completion of Ground Floor Slab</td><td>5%</td><td>40%</td></tr>
       <tr><td>4</td><td>On completion of RCC Slab of 1st Floor</td><td>4%</td><td>44%</td></tr>
@@ -380,7 +381,7 @@
 </div>
 
 <div class="disclaimer">
-  Prices effective WEF 05.05.2026 · Subject to revision without prior notice<br>
+  Prices effective WEF 16.06.2026 · Subject to revision without prior notice<br>
   This quotation is for information purposes only and does not constitute an offer or contract.
 </div>
 
@@ -404,20 +405,16 @@
     }
   }
 
-  // ── Price base data (WEF 05.05.2026) ──
+  // ── Price base data (WEF 16.06.2026) ──
   // 3BHK = 1540 sqft · 2BHK = 1185 sqft
   // positions 01,04,05,08 = 3BHK · 02,03,06,07 = 2BHK
-  // rate tiers: F1-4 low=4590/high=4640, F5-8 low=4640/high=4690, F9-16 low=4690/high=4740
+  // flat rate: ₹4690/sq.ft. for all floors & units
   function baseData(floor, unit) {
-    const f = +floor, u = +unit;
+    const u = +unit;
     const is3 = (u===1||u===4||u===5||u===8);
     const type = is3 ? '3BHK' : '2BHK';
     const area = is3 ? 1540 : 1185;
-    const low  = (u <= 4);
-    let rate;
-    if      (f <= 4)  rate = low ? 4590 : 4640;
-    else if (f <= 8)  rate = low ? 4640 : 4690;
-    else              rate = low ? 4690 : 4740;
+    const rate = 4690;
     return { type, area, rate };
   }
 
@@ -426,7 +423,8 @@
     const sdr  = isFemale ? 5 : 6;
     const infra = type==='3BHK' ? 250000 : 200000;
     const sub  = amount + 90000 + 20000 + infra;
-    const stRaw = amount * sdr / 100 + 30000;
+    const regFee = Math.min(amount * 0.01, 30000);   // 1% Reg. Fees, capped at ₹30,000
+    const stRaw = amount * sdr / 100 + regFee;
     const stamp = Math.ceil(stRaw / 100) * 100;   // round UP to nearest 100
     const gst   = Math.round(amount * 0.05);
     const mrp   = sub + stamp + gst;
@@ -688,7 +686,7 @@
       `(1) Maintenance Charges: Rs.90,000  (3 years from possession)`,
       `(2) Legal Fees: Rs.20,000  (Agreement to Sale & Sale Deed registration)`,
       `(3) Infrastructure Cost: ${rsPdf(p.infra)}  (Roads, drainage, utilities & landscaping)`,
-      `(4) Stamp Duty: ${p.sdr}% of Base Amount + Reg. Fees (capped Rs.30,000)  -  Maharashtra Govt. rates${p.isFemale ? '  |  5% applied for female buyer(s)' : ''}`,
+      `(4) Stamp Duty: ${p.sdr}% of Base Amount + 1% Reg. Fees (capped Rs.30,000)  -  Maharashtra Govt. rates${p.isFemale ? '  |  5% applied for female buyer(s)' : ''}`,
       `(5) GST as per prevailing GST norms  -  subject to Govt. of India notifications`,
     ];
     const fnH = 5 + fnLines.length * 3.8;
@@ -717,7 +715,8 @@
       margin: { left: ML, right: MR },
       head: [['Sr.', 'Stage of Construction', '% of Total', 'Cumulative']],
       body: [
-        [1,  'On Booking / at the time of Agreement for Sale', '10%', '10%'],
+        ['',  'Application Money', { content: 'Rs.1,00,000', colSpan: 2, halign: 'center' }],
+        [1,  'Before Execution of Agreement for Sale', '10% (minus application money)', '10%'],
         [2,  'On completion of Plinth',                        '25%', '35%'],
         [3,  'On completion of Ground Floor Slab',             '5%',  '40%'],
         [4,  'On completion of RCC Slab of 1st Floor',         '4%',  '44%'],
@@ -756,7 +755,7 @@
       alternateRowStyles: { fillColor: [249,251,253] },
       theme: 'grid',
       didParseCell: (data) => {
-        if (data.section === 'body' && data.row.index === 19) {
+        if (data.section === 'body' && data.row.index === 20) {
           data.cell.styles.fillColor = PC;
           data.cell.styles.textColor = [255,255,255];
           data.cell.styles.fontStyle = 'bold';
