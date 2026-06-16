@@ -6,6 +6,9 @@
   <title>Golden Legacy – Quotation Generator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <!-- Firebase: read-only sync with the live Wing B Booking Status board -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -390,18 +393,37 @@
 
   // ── State ──
   let curFloor = '', curUnit = '', curType = '', curArea = 0, curP = null;
-  let flatStatus = {};  // loaded from data.json
+  let flatStatus = {};  // loaded live from the Wing B Booking Status board (Firestore)
+
+  // ── Firebase (read-only — same project as the Booking Status board) ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyDOfi8f02dqTOVLsrZ-S8dvibD2HonftVA",
+    authDomain: "golden-legacy-booking.firebaseapp.com",
+    projectId: "golden-legacy-booking",
+    storageBucket: "golden-legacy-booking.firebasestorage.app",
+    messagingSenderId: "314777966271",
+    appId: "1:314777966271:web:57ecc2f0160e41b9cbd80a"
+  };
+  const BOARD_PATH = { collection: 'booking_boards', doc: 'wingB' };
 
   // ── Load availability data ──
+  // Pulls live Confirmed bookings from the same Firestore board the Booking Status
+  // page writes to, so a flat marked "Booked (Confirmed)" there immediately stops
+  // appearing in this quotation tool's flat dropdown. Provisional holds are left
+  // untouched here — sales staff can still quote a flat that's only tentatively held.
   async function loadData() {
     try {
-      const resp = await fetch('./data.json?v=' + Date.now());
-      if (resp.ok) {
-        const data = await resp.json();
-        flatStatus = data.flats || {};
-      }
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const snap = await db.collection(BOARD_PATH.collection).doc(BOARD_PATH.doc).get();
+      const flats = (snap.exists && snap.data().flats) || {};
+      const statusMap = {};
+      Object.keys(flats).forEach(no => {
+        if (flats[no] && flats[no].status === 'confirmed') statusMap[no] = 'sold';
+      });
+      flatStatus = statusMap;
     } catch (e) {
-      flatStatus = {}; // if file can't be loaded, all flats are available
+      flatStatus = {}; // if the board can't be reached, all flats show as available
     }
   }
 
